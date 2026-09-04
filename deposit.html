@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konto aufladen - Blackjack Web-App</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Spezifisches Styling nur für die Kassen-Ansicht */
+        .payment-box {
+            background-color: #353b48;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: left;
+            border: 1px solid #7f8fa6;
+        }
+        .payment-methods {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .payment-methods label {
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .card-details-row {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body class="deposit-page">
+
+    <div class="container deposit-container">
+        <h1>Kasse</h1>
+        <p class="subtitle">Aktuelles Guthaben: <strong class="balance-amount"><span id="balance-display">0</span> €</strong></p>
+
+        <!-- Formular für die fiktive Aufladung -->
+        <form id="deposit-form">
+            <div class="payment-box">
+                <h3>Zahlungsmethode</h3>
+                
+                <div class="payment-methods">
+                    <label><input type="radio" name="payment" value="creditcard" checked> 💳 Kreditkarte</label>
+                    <label><input type="radio" name="payment" value="paypal"> 🅿️ PayPal</label>
+                </div>
+
+                <!-- Fiktive Eingabefelder, um den Prozess realistisch wirken zu lassen -->
+                <div class="form-group">
+                    <input type="text" placeholder="Kreditkartennummer (16 Ziffern)" required>
+                </div>
+                
+                <div class="card-details-row form-group">
+                    <input type="text" placeholder="MM/YY" required>
+                    <input type="text" placeholder="CVC" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="deposit-amount">Aufladebetrag (€)</label>
+                <input type="number" id="deposit-amount" placeholder="z.B. 50" min="10" step="10" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full" style="margin-bottom: 15px;">Zahlung bestätigen</button>
+            <a href="dashboard.html" class="btn btn-secondary btn-full">Abbrechen & Zurück</a>
+        </form>
+    </div>
+
+    <!-- Globale Logik -->
+    <script src="js/app.js"></script>
+    
+    <!-- Seitenspezifische Logik (Aufladen) -->
+    <script>
+        // 1. Sicherheits-Check: Ist der Nutzer eingeloggt?
+        if (!user || !user.username) {
+            window.location.href = 'index.html';
+        } else {
+            // Aktuelles Guthaben beim Laden der Seite anzeigen
+            document.getElementById('balance-display').innerText = user.balance;
+        }
+
+        // 2. Auflade-Event abfangen
+        document.getElementById('deposit-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Verhindert das Neuladen der Seite
+            
+            // Betrag aus dem Eingabefeld als Zahl (Integer) auslesen
+            const amount = parseInt(document.getElementById('deposit-amount').value, 10);
+
+            // Prüfen, ob es eine gültige Zahl größer als 0 ist
+            if (!isNaN(amount) && amount > 0) {
+                
+                // Guthaben des Nutzers erhöhen
+                user.balance += amount;
+                
+                // Im LocalStorage speichern (Funktion kommt aus app.js)
+                saveUser(); 
+                
+                // Erfolgsmeldung für die Fallstudie anzeigen
+                alert(`Erfolgreich! Dir wurden ${amount} € gutgeschrieben.`);
+                
+                // Zurück zur Lobby
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

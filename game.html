@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Tisch - Web-App</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="game-page">
+
+    <div class="container game-container">
+        
+        <!-- Kopfbereich: Navigation und Live-Guthaben -->
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <a href="dashboard.html" class="btn btn-secondary">🔙 Zur Lobby</a>
+            <div class="balance-widget" style="margin: 0; padding: 10px 20px;">
+                Guthaben: <strong class="balance-amount"><span class="balance-display">0</span> €</strong>
+            </div>
+        </header>
+
+        <!-- Das eigentliche Spielfeld (grüner Tisch) -->
+        <main id="game-table">
+            
+            <!-- 1. Overlay für den Wetteinsatz (wird nach Bestätigung ausgeblendet) -->
+            <div id="bet-overlay">
+                <h2 style="color: white; margin-bottom: 20px; font-size: 32px;">Ihren Einsatz bitte</h2>
+                <div class="form-group" style="width: 250px;">
+                    <input type="number" id="bet-input" placeholder="Einsatz in €" min="1" required style="text-align: center; font-size: 24px; font-weight: bold;">
+                </div>
+                <button onclick="placeBet()" class="btn btn-secondary btn-large" style="width: 250px;">Karten geben (Deal)</button>
+            </div>
+
+            <!-- 2. Dealer-Bereich -->
+            <div id="dealer-area" class="hidden" style="text-align: center; color: white;">
+                <h3>Dealer <span id="dealer-score"></span></h3>
+                <div id="dealer-cards" class="card-container">
+                    <!-- Karten werden hier von JS animiert eingefügt -->
+                </div>
+            </div>
+
+            <!-- 3. Spieler-Bereich (Hier können durch Splits mehrere Hände auftauchen) -->
+            <div id="player-area" class="hidden" style="text-align: center; color: white; margin-top: 20px;">
+                <div id="player-hands-container">
+                    <!-- Spielerhände werden hier von JS generiert -->
+                </div>
+            </div>
+
+            <!-- 4. Spiel-Steuerung (Hit, Stand, Split) -->
+            <div id="game-controls" class="hidden" style="display: flex; justify-content: center; gap: 15px; margin-top: 30px;">
+                <button id="btn-hit" onclick="hit()" class="btn btn-primary" style="width: 130px; font-size: 18px;">Hit</button>
+                <button id="btn-stand" onclick="stand()" class="btn btn-danger" style="width: 130px; font-size: 18px;">Stand</button>
+                <button id="btn-split" onclick="split()" class="btn btn-secondary" style="width: 130px; font-size: 18px;" disabled>Split</button>
+            </div>
+
+            <!-- 5. Overlay für das Runden-Ergebnis -->
+            <div id="game-result" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 39, 46, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200;">
+                <h2 style="color: var(--secondary-color); font-size: 36px; margin-bottom: 10px;">Runde beendet</h2>
+                
+                <!-- Hier gibt JS den Text aus (z.B. "Gewonnen! + 50 €") -->
+                <h3 id="result-msg" style="color: white; text-align: center; line-height: 1.6; margin-bottom: 40px; font-size: 20px; font-weight: normal;"></h3>
+                
+                <div style="display: flex; gap: 20px;">
+                    <button onclick="location.reload()" class="btn btn-primary btn-large" style="margin: 0; width: auto;">Neue Runde spielen</button>
+                    <a href="dashboard.html" class="btn btn-secondary btn-large" style="margin: 0; width: auto; background-color: #7f8fa6;">Zurück zur Lobby</a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 1. Globale Logik laden (Nutzerdaten & Kontostand) -->
+    <script src="js/app.js"></script>
+    
+    <!-- Sicherheits-Check (muss nach app.js stehen) -->
+    <script>
+        if (!user || !user.username) {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <!-- 2. Spiellogik laden (nur auf dieser Seite nötig) -->
+    <script src="js/game.js"></script>
+
+</body>
+</html>

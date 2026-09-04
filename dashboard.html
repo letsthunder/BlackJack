@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Blackjack Web-App</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dashboard-page">
+
+    <div class="container dashboard-container">
+        <!-- Kopfbereich mit Begrüßung und Kontostand -->
+        <header class="dashboard-header">
+            <h1 id="welcome-message">Willkommen!</h1>
+            <div class="balance-widget">
+                <span>Dein Guthaben:</span>
+                <strong class="balance-amount"><span id="balance-display">0</span> €</strong>
+            </div>
+        </header>
+
+        <!-- Hauptmenü mit den wichtigsten Aktionen -->
+        <main class="dashboard-menu">
+            <h2>Was möchtest du tun?</h2>
+            <div class="menu-actions">
+                <a href="game.html" class="btn btn-primary btn-large">♠♥ Blackjack spielen ♣♦</a>
+                <a href="deposit.html" class="btn btn-secondary btn-large">Guthaben aufladen</a>
+            </div>
+        </main>
+
+        <!-- Fußbereich für den Logout -->
+        <footer class="dashboard-footer">
+            <button id="logout-btn" class="btn btn-danger">Ausloggen</button>
+        </footer>
+    </div>
+
+    <!-- Globale Logik (Kontostand, User-Daten) -->
+    <script src="js/app.js"></script>
+    
+    <!-- Seitenspezifische Logik -->
+    <script>
+        // 1. Sicherheits-Check: Prüfen, ob der Nutzer überhaupt eingeloggt ist.
+        // Das Objekt 'user' wird aus der app.js zur Verfügung gestellt.
+        if (!user || !user.username) {
+            window.location.href = 'index.html'; // Zurück zum Login, falls nicht angemeldet
+        } else {
+            // 2. Willkommensnachricht personalisieren
+            document.getElementById('welcome-message').innerText = 'Willkommen, ' + user.username + '!';
+            
+            // 3. Kontostand anzeigen (die ID 'balance-display' wird auch in app.js genutzt)
+            document.getElementById('balance-display').innerText = user.balance;
+        }
+
+        // 4. Logout-Funktion anbinden
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            logoutUser(); // Diese Funktion werden wir in der app.js definieren
+        });
+    </script>
+</body>
+</html>

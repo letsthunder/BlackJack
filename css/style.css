@@ -1,0 +1,228 @@
+/* ==========================================================================
+   1. VARIABLEN & GRUNDLAGEN (RESET)
+   ========================================================================== */
+:root {
+    --bg-dark: #1e272e;
+    --panel-bg: #2f3640;
+    --text-light: #f5f6fa;
+    --primary-color: #0097e6;
+    --primary-hover: #00a8ff;
+    --secondary-color: #e1b12c;
+    --secondary-hover: #fbc531;
+    --danger-color: #c23616;
+    --danger-hover: #e84118;
+    --casino-green: #0f6125;
+    --casino-border: #0a3d17;
+    --card-white: #ffffff;
+    --card-red: #e74c3c;
+    --card-black: #2f3640;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: var(--panel-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+}
+
+.login-container, .dashboard-container, .deposit-container {
+    max-width: 450px;
+    text-align: center;
+}
+
+.game-container {
+    max-width: 1000px;
+    padding: 20px;
+}
+
+h1, h2, h3 { margin-bottom: 15px; }
+.subtitle { color: #7f8fa6; margin-bottom: 30px; }
+
+/* ==========================================================================
+   2. FORMULARE & BUTTONS
+   ========================================================================== */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+input[type="text"], input[type="password"], input[type="number"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #7f8fa6;
+    border-radius: 6px;
+    background-color: #353b48;
+    color: var(--text-light);
+    font-size: 16px;
+}
+
+input:focus { outline: none; border-color: var(--primary-color); }
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-full { width: 100%; }
+.btn-large { padding: 15px 30px; font-size: 18px; width: 100%; margin-bottom: 15px; }
+.btn-primary { background-color: var(--primary-color); color: #fff; }
+.btn-primary:hover { background-color: var(--primary-hover); }
+.btn-secondary { background-color: var(--secondary-color); color: #fff; }
+.btn-secondary:hover { background-color: var(--secondary-hover); }
+.btn-danger { background-color: var(--danger-color); color: #fff; }
+.btn-danger:hover { background-color: var(--danger-hover); }
+
+/* ==========================================================================
+   3. DASHBOARD & KONTO
+   ========================================================================== */
+.balance-widget {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+.balance-amount { color: var(--secondary-color); font-size: 24px; display: block; margin-top: 5px; }
+.payment-box { background-color: #353b48; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #7f8fa6; text-align: left;}
+.payment-methods { display: flex; gap: 20px; margin-bottom: 20px; }
+
+/* ==========================================================================
+   4. SPIELTISCH (GAME VIEW) - FESTES LAYOUT
+   ========================================================================== */
+#game-table {
+    position: relative;
+    background-color: var(--casino-green);
+    border: 10px solid var(--casino-border);
+    border-radius: 20px;
+    height: 650px; /* NEU: Feste Höhe, damit der Tisch niemals wackelt oder springt */
+    padding: 30px;
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+    overflow: hidden; 
+}
+
+#bet-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(30, 39, 46, 0.95);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    z-index: 100;
+}
+
+.hidden { display: none !important; }
+
+/* ==========================================================================
+   5. KARTEN & LEGE-ANIMATION
+   ========================================================================== */
+.card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; /* NEU: Karten wachsen nach rechts, bestehende Karten bewegen sich NICHT */
+    flex-wrap: wrap; /* Falls es zu viele Karten werden, rutschen sie in die nächste Zeile */
+    gap: 10px;
+    width: 320px; /* NEU: Fester Container für ca. 3 Karten nebeneinander */
+    margin: 15px auto; /* Container selbst mittig auf dem Tisch positioniert */
+    min-height: 130px;
+}
+
+.card {
+    width: 90px;
+    height: 130px;
+    background-color: var(--card-white);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+    
+    /* NEU: Saubere "Lege"-Animation. Karte startet verschoben und durchsichtig */
+    opacity: 0;
+    transform: translate(100px, -50px); 
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+.card.dealt {
+    opacity: 1;
+    transform: translate(0, 0); /* Karte liegt fest auf ihrem berechneten Platz */
+}
+
+.card.red { color: var(--card-red); }
+.card.black { color: var(--card-black); }
+
+.hidden-card {
+    background: repeating-linear-gradient(45deg, #2980b9, #2980b9 10px, #3498db 10px, #3498db 20px);
+    border: 2px solid #fff;
+    color: transparent !important;
+}
+
+/* ==========================================================================
+   6. SPIELER-HÄNDE (SPLIT-BEREICH)
+   ========================================================================== */
+#player-hands-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.player-hand {
+    border: 2px dashed transparent;
+    padding: 15px;
+    border-radius: 12px;
+    transition: border-color 0.3s ease;
+    
+    /* Layout: Überschrift oben, Karten darunter */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 250px;
+}
+
+.player-hand.active-hand {
+    border-color: var(--secondary-color);
+    background-color: rgba(241, 196, 15, 0.1);
+}
+
+/* Neuer Container nur für die Karten (legt sie von links nach rechts) */
+.hand-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 140px;
+    margin-top: 10px;
+}
