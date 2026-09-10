@@ -5,14 +5,13 @@
     --bg-dark: #1e272e;
     --panel-bg: #2f3640;
     --text-light: #f5f6fa;
-    --primary-color: #0097e6;
-    --primary-hover: #00a8ff;
+    --primary-color: #3b638c;
     --secondary-color: #e1b12c;
-    --secondary-hover: #fbc531;
-    --danger-color: #c23616;
-    --danger-hover: #e84118;
+    --danger-color: #8e2a2a;
     --casino-green: #0f6125;
-    --casino-border: #0a3d17;
+    --casino-border: #3c2415;
+    --gold-border: #b8944d;
+    --gold-text: #e2c269;
     --card-white: #ffffff;
     --card-red: #e74c3c;
     --card-black: #2f3640;
@@ -24,8 +23,11 @@
     padding: 0;
 }
 
+body, button, input, select, .player-hand, h1, h2, h3 {
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
     /* Casino-Hintergrundbild einbinden */
     background: url('dein-casino-hintergrund.jpg') no-repeat center center fixed;
     background-size: cover;
@@ -37,9 +39,9 @@ body {
 }
 
 .container {
-    /* Halbtransparenter dunkler Hintergrund statt des festen Grautons */
-    background-color: rgba(20, 20, 20, 0.6);
-    backdrop-filter: blur(4px); /* Leichtes Verschwimmen des Hintergrunds dahinter */
+    /* Halbtransparenter dunkler Hintergrund */
+    background-color: rgba(20, 20, 20, 0.65);
+    backdrop-filter: blur(6px);
     padding: 40px;
     border-radius: 16px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
@@ -56,11 +58,16 @@ body {
     padding: 20px;
 }
 
-h1, h2, h3 { margin-bottom: 15px; }
-.subtitle { color: #7f8fa6; margin-bottom: 30px; }
+h1, h2, h3 { 
+    margin-bottom: 15px; 
+    color: var(--gold-text);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.subtitle { color: #d1ccc0; margin-bottom: 30px; }
 
 /* ==========================================================================
-   2. FORMULARE & BUTTONS
+   2. FORMULARE & BUTTONS (CASINO 3D-STYLE)
    ========================================================================== */
 .form-group {
     margin-bottom: 20px;
@@ -71,75 +78,139 @@ h1, h2, h3 { margin-bottom: 15px; }
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
+    color: var(--gold-text);
 }
 
 input[type="text"], input[type="password"], input[type="number"] {
     width: 100%;
     padding: 12px 15px;
-    border: 2px solid #7f8fa6;
+    border: 2px solid var(--gold-border);
     border-radius: 6px;
-    background-color: #353b48;
+    background-color: rgba(20, 20, 20, 0.8);
     color: var(--text-light);
     font-size: 16px;
 }
 
-input:focus { outline: none; border-color: var(--primary-color); }
+input:focus { 
+    outline: none; 
+    border-color: #ffd700; 
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
 
 .btn {
     display: inline-block;
     padding: 12px 24px;
     font-size: 16px;
     font-weight: bold;
-    border: none;
-    border-radius: 6px;
+    color: #f4e8c1;
+    border: 2px solid var(--gold-border);
+    border-radius: 8px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    transition: background-color 0.3s ease;
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.7),
+        0 4px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    transition: filter 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
 }
 
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn:hover:not(:disabled) {
+    filter: brightness(1.2);
+    border-color: #ffd700;
+    transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.6); }
 .btn-full { width: 100%; }
 .btn-large { padding: 15px 30px; font-size: 18px; width: 100%; margin-bottom: 15px; }
-.btn-primary { background-color: var(--primary-color); color: #fff; }
-.btn-primary:hover { background-color: var(--primary-hover); }
-.btn-secondary { background-color: var(--secondary-color); color: #fff; }
-.btn-secondary:hover { background-color: var(--secondary-hover); }
-.btn-danger { background-color: var(--danger-color); color: #fff; }
-.btn-danger:hover { background-color: var(--danger-hover); }
+
+/* Hit Button (Blau metallic) */
+.btn-primary { 
+    background: linear-gradient(180deg, #3b638c 0%, #1e3650 100%); 
+}
+
+/* Split Button (Grün metallic) */
+.btn-secondary { 
+    background: linear-gradient(180deg, #3d7a4e 0%, #1b4226 100%); 
+}
+
+/* Stand Button (Rot metallic) */
+.btn-danger { 
+    background: linear-gradient(180deg, #8e2a2a 0%, #4a1212 100%); 
+}
+
+/* Lobby- & Re-Use-Buttons (Holz-/Gold-Look) */
+.btn-lobby {
+    background: linear-gradient(180deg, #4a3b2c 0%, #241a12 100%);
+    border: 2px solid var(--gold-border);
+    color: var(--gold-text);
+}
 
 /* ==========================================================================
    3. DASHBOARD & KONTO
    ========================================================================== */
 .balance-widget {
-    background: rgba(0, 0, 0, 0.2);
+    background: linear-gradient(180deg, #4a3b2c 0%, #241a12 100%);
+    border: 2px solid var(--gold-border);
+    color: var(--gold-text);
     padding: 15px;
     border-radius: 8px;
     font-size: 18px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.5);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
 }
-.balance-amount { color: var(--secondary-color); font-size: 24px; display: block; margin-top: 5px; }
-.payment-box { background-color: #353b48; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #7f8fa6; text-align: left;}
+
+.balance-amount { 
+    color: #ffd700; 
+    font-size: 24px; 
+    display: block; 
+    margin-top: 5px; 
+}
+
+.payment-box { 
+    background-color: rgba(20, 20, 20, 0.8); 
+    padding: 20px; 
+    border-radius: 8px; 
+    margin-bottom: 25px; 
+    border: 1px solid var(--gold-border); 
+    text-align: left;
+}
+
 .payment-methods { display: flex; gap: 20px; margin-bottom: 20px; }
 
 /* ==========================================================================
-   4. SPIELTISCH (GAME VIEW) - FESTES LAYOUT
+   4. SPIELTISCH (GAME VIEW) - FESTES LAYOUT & HOLZ-/LEDER-RAHMEN
    ========================================================================== */
 #game-table {
     position: relative;
     /* Radialer Verlauf für edlen, dunkelgrünen Filzeffekt */
-    background: radial-gradient(circle, #0f5228 0%, #052912 85%, #021a0a 100%);
-    border: 14px solid #3d2314; /* Holzfarbener Außenrahmen */
-    border-radius: 30px;
+    background: radial-gradient(circle, #0c4d26 0%, #052612 85%, #021208 100%);
+    
+    /* Dreifacher Rahmen: Holz außen, rotes Leder innen, goldene Trennleiste */
+    border: 16px solid var(--casino-border); 
+    border-radius: 35px;
+    box-shadow: 
+        inset 0 0 0 14px #67141f, /* Rote Leder-Polsterung */
+        inset 0 0 0 16px #c4a159, /* Goldene Trennlinie */
+        inset 0 0 50px rgba(0, 0, 0, 0.8),
+        0 20px 40px rgba(0, 0, 0, 0.7);
+        
     height: 650px;
     padding: 30px;
-    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7), 0 20px 40px rgba(0, 0, 0, 0.6);
     overflow: hidden; 
 }
 
 #bet-overlay {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(30, 39, 46, 0.95);
+    background-color: rgba(15, 15, 15, 0.92);
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     z-index: 100;
 }
@@ -147,9 +218,8 @@ input:focus { outline: none; border-color: var(--primary-color); }
 .hidden { display: none !important; }
 
 /* ==========================================================================
-   5. KARTEN & LEGE-ANIMATION
+   5. KARTEN & LEGE-ANIMATION (3D PERSPEKTIVE)
    ========================================================================== */
-/* Perspektive für 3D-Karten hinzufügen */
 .card-container, .hand-cards {
     perspective: 800px;
     display: flex;
@@ -163,14 +233,14 @@ input:focus { outline: none; border-color: var(--primary-color); }
 }
 
 .card {
-    width: 75px;   /* Vorher 90px */
-    height: 110px; /* Vorher 130px */
+    width: 75px;
+    height: 110px;
     background-color: var(--card-white);
     border-radius: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 22px; /* Schriftgröße angepasst an kleinere Karte */
+    font-size: 22px;
     font-weight: bold;
     box-shadow: 3px 6px 15px rgba(0, 0, 0, 0.5);
     flex-shrink: 0;
@@ -182,7 +252,7 @@ input:focus { outline: none; border-color: var(--primary-color); }
 
 .card.dealt {
     opacity: 1;
-    /* Leichter Neigungswinkel aufs Board */
+    /* Leicht schräg stehender Winkel auf das Board */
     transform: rotateX(20deg) rotateY(-4deg) translate(0, 0);
 }
 
@@ -206,12 +276,15 @@ input:focus { outline: none; border-color: var(--primary-color); }
 }
 
 .player-hand {
-    border: 2px dashed transparent;
-    padding: 15px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 2px solid var(--gold-border);
     border-radius: 12px;
-    transition: border-color 0.3s ease;
+    padding: 15px;
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.4);
+    color: var(--gold-text);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
     
-    /* Layout: Überschrift oben, Karten darunter */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -219,17 +292,17 @@ input:focus { outline: none; border-color: var(--primary-color); }
 }
 
 .player-hand.active-hand {
-    border-color: var(--secondary-color);
-    background-color: rgba(241, 196, 15, 0.1);
+    border-color: #ffd700;
+    background-color: rgba(241, 196, 15, 0.15);
+    box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.2), 0 0 12px rgba(255, 215, 0, 0.3);
 }
 
-/* Neuer Container nur für die Karten (legt sie von links nach rechts) */
 .hand-cards {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     flex-wrap: wrap;
     gap: 10px;
-    min-height: 140px;
+    min-height: 120px;
     margin-top: 10px;
 }
