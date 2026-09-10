@@ -26,7 +26,9 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: var(--bg-dark);
+    /* Casino-Hintergrundbild einbinden */
+    background: url('dein-casino-hintergrund.jpg') no-repeat center center fixed;
+    background-size: cover;
     color: var(--text-light);
     display: flex;
     justify-content: center;
@@ -35,10 +37,12 @@ body {
 }
 
 .container {
-    background-color: var(--panel-bg);
+    /* Halbtransparenter dunkler Hintergrund statt des festen Grautons */
+    background-color: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(4px); /* Leichtes Verschwimmen des Hintergrunds dahinter */
     padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
     width: 100%;
 }
 
@@ -122,12 +126,13 @@ input:focus { outline: none; border-color: var(--primary-color); }
    ========================================================================== */
 #game-table {
     position: relative;
-    background-color: var(--casino-green);
-    border: 10px solid var(--casino-border);
-    border-radius: 20px;
-    height: 650px; /* NEU: Feste Höhe, damit der Tisch niemals wackelt oder springt */
+    /* Radialer Verlauf für edlen, dunkelgrünen Filzeffekt */
+    background: radial-gradient(circle, #0f5228 0%, #052912 85%, #021a0a 100%);
+    border: 14px solid #3d2314; /* Holzfarbener Außenrahmen */
+    border-radius: 30px;
+    height: 650px;
     padding: 30px;
-    box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.7), 0 20px 40px rgba(0, 0, 0, 0.6);
     overflow: hidden; 
 }
 
@@ -144,39 +149,41 @@ input:focus { outline: none; border-color: var(--primary-color); }
 /* ==========================================================================
    5. KARTEN & LEGE-ANIMATION
    ========================================================================== */
-.card-container {
+/* Perspektive für 3D-Karten hinzufügen */
+.card-container, .hand-cards {
+    perspective: 800px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start; /* NEU: Karten wachsen nach rechts, bestehende Karten bewegen sich NICHT */
-    flex-wrap: wrap; /* Falls es zu viele Karten werden, rutschen sie in die nächste Zeile */
+    justify-content: flex-start;
+    flex-wrap: wrap;
     gap: 10px;
-    width: 320px; /* NEU: Fester Container für ca. 3 Karten nebeneinander */
-    margin: 15px auto; /* Container selbst mittig auf dem Tisch positioniert */
-    min-height: 130px;
+    width: 300px;
+    margin: 15px auto;
+    min-height: 110px;
 }
 
 .card {
-    width: 90px;
-    height: 130px;
+    width: 75px;   /* Vorher 90px */
+    height: 110px; /* Vorher 130px */
     background-color: var(--card-white);
-    border-radius: 8px;
+    border-radius: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 28px;
+    font-size: 22px; /* Schriftgröße angepasst an kleinere Karte */
     font-weight: bold;
-    box-shadow: 2px 4px 10px rgba(0,0,0,0.4);
+    box-shadow: 3px 6px 15px rgba(0, 0, 0, 0.5);
     flex-shrink: 0;
     
-    /* NEU: Saubere "Lege"-Animation. Karte startet verschoben und durchsichtig */
     opacity: 0;
-    transform: translate(100px, -50px); 
+    transform: translate(100px, -50px) rotateX(25deg); 
     transition: transform 0.4s ease-out, opacity 0.4s ease-out;
 }
 
 .card.dealt {
     opacity: 1;
-    transform: translate(0, 0); /* Karte liegt fest auf ihrem berechneten Platz */
+    /* Leichter Neigungswinkel aufs Board */
+    transform: rotateX(20deg) rotateY(-4deg) translate(0, 0);
 }
 
 .card.red { color: var(--card-red); }
