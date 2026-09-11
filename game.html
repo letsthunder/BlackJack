@@ -21,11 +21,31 @@
         <!-- Das eigentliche Spielfeld (grüner Tisch) -->
         <main id="game-table">
             
-            <!-- 1. Overlay für den Wetteinsatz (wird nach Bestätigung ausgeblendet) -->
-            <div id="bet-overlay">
-                <h2 style="color: white; margin-bottom: 15px; font-size: 32px;">Ihren Einsatz bitte</h2>
+            <!-- Linker Seitenbereich (Status oben auf Dealer-Höhe, Nav-Buttons unten auf Spieler-Höhe) -->
+            <div id="left-sidebar">
+                <div id="side-status-box" class="hidden">
+                    <h4 class="side-title">Rundenergebnis</h4>
+                    <div id="side-result-msg"></div>
+                </div>
                 
-                <!-- Schnellauswahl-Buttons (Jetons) -->
+                <div id="side-end-controls" class="hidden">
+                    <button onclick="restartRound()" class="btn btn-primary btn-sm btn-full">Neue Runde</button>
+                    <a href="dashboard.html" class="btn btn-secondary btn-sm btn-full btn-lobby" style="margin-top: 8px;">Zur Lobby</a>
+                </div>
+            </div>
+
+            <!-- Rechter Seitenbereich (Pot-Anzeige(n) mit 3D-Chips auf Dealer-Höhe) -->
+            <div id="right-sidebar">
+                <div id="pots-container">
+                    <!-- Dynamisch per JS generiert -->
+                </div>
+            </div>
+            
+            <!-- 1. Overlay für den Wetteinsatz (nur vor Spielstart) -->
+            <div id="bet-overlay">
+                <h2 style="color: white; margin-bottom: 10px; font-size: 32px;">Ihren Einsatz bitte</h2>
+                
+                <!-- Schnellauswahl-Buttons im Jeton-Design -->
                 <div class="quick-bets">
                     <button type="button" class="btn-chip chip-5" data-amount="5">+5 €</button>
                     <button type="button" class="btn-chip chip-10" data-amount="10">+10 €</button>
@@ -34,7 +54,7 @@
                 </div>
 
                 <div class="form-group" style="width: 250px;">
-                    <input type="number" id="bet-input" placeholder="Einsatz in €" value="10" min="1" required style="text-align: center; font-size: 24px; font-weight: bold;">
+                    <input type="number" id="bet-input" placeholder="Einsatz in €" min="1" value="10" required style="text-align: center; font-size: 24px; font-weight: bold;">
                 </div>
                 <button onclick="placeBet()" class="btn btn-secondary btn-large" style="width: 250px;">Karten geben (Deal)</button>
             </div>
@@ -47,7 +67,7 @@
                 </div>
             </div>
 
-            <!-- 3. Spieler-Bereich (Hier können durch Splits mehrere Hände auftauchen) -->
+            <!-- 3. Spieler-Bereich -->
             <div id="player-area" class="hidden" style="text-align: center; color: white; margin-top: 20px;">
                 <div id="player-hands-container">
                     <!-- Spielerhände werden hier von JS generiert -->
@@ -61,33 +81,20 @@
                 <button id="btn-split" onclick="split()" class="btn btn-secondary" style="width: 130px; font-size: 18px;" disabled>Split</button>
             </div>
 
-            <!-- 5. Overlay für das Runden-Ergebnis -->
-            <div id="game-result" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 39, 46, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 200;">
-                <h2 style="color: var(--secondary-color); font-size: 36px; margin-bottom: 10px;">Runde beendet</h2>
-                
-                <!-- Hier gibt JS den Text aus (z.B. "Gewonnen! + 50 €") -->
-                <h3 id="result-msg" style="color: white; text-align: center; line-height: 1.6; margin-bottom: 40px; font-size: 20px; font-weight: normal;"></h3>
-                
-                <div style="display: flex; gap: 20px;">
-                    <button onclick="location.reload()" class="btn btn-primary btn-large" style="margin: 0; width: auto;">Neue Runde spielen</button>
-                    <a href="dashboard.html" class="btn btn-secondary btn-large" style="margin: 0; width: auto; background-color: #7f8fa6;">Zurück zur Lobby</a>
-                </div>
-            </div>
-
         </main>
     </div>
 
-    <!-- 1. Globale Logik laden (Nutzerdaten & Kontostand) -->
+    <!-- 1. Globale Logik laden -->
     <script src="js/app.js"></script>
     
-    <!-- Sicherheits-Check (muss nach app.js stehen) -->
+    <!-- Sicherheits-Check -->
     <script>
         if (!user || !user.username) {
             window.location.href = 'index.html';
         }
     </script>
 
-    <!-- 2. Spiellogik laden (nur auf dieser Seite nötig) -->
+    <!-- 2. Spiellogik laden -->
     <script src="js/game.js"></script>
 
 </body>

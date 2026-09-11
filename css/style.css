@@ -28,7 +28,6 @@ body, button, input, select, .player-hand, h1, h2, h3 {
 }
 
 body {
-    /* Casino-Hintergrundbild einbinden */
     background: url('dein-casino-hintergrund.jpg') no-repeat center center fixed;
     background-size: cover;
     color: var(--text-light);
@@ -39,7 +38,6 @@ body {
 }
 
 .container {
-    /* Halbtransparenter dunkler Hintergrund */
     background-color: rgba(20, 20, 20, 0.65);
     backdrop-filter: blur(6px);
     padding: 40px;
@@ -54,7 +52,7 @@ body {
 }
 
 .game-container {
-    max-width: 1000px;
+    max-width: 1050px;
     padding: 20px;
 }
 
@@ -67,7 +65,7 @@ h1, h2, h3 {
 .subtitle { color: #d1ccc0; margin-bottom: 30px; }
 
 /* ==========================================================================
-   2. FORMULARE & BUTTONS (CASINO 3D-STYLE)
+   2. FORMULARE & BUTTONS
    ========================================================================== */
 .form-group {
     margin-bottom: 20px;
@@ -130,23 +128,20 @@ input:focus {
 .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.6); }
 .btn-full { width: 100%; }
 .btn-large { padding: 15px 30px; font-size: 18px; width: 100%; margin-bottom: 15px; }
+.btn-sm { padding: 8px 12px; font-size: 13px; }
 
-/* Hit Button (Blau metallic) */
 .btn-primary { 
     background: linear-gradient(180deg, #3b638c 0%, #1e3650 100%); 
 }
 
-/* Split Button (Grün metallic) */
 .btn-secondary { 
     background: linear-gradient(180deg, #3d7a4e 0%, #1b4226 100%); 
 }
 
-/* Stand Button (Rot metallic) */
 .btn-danger { 
     background: linear-gradient(180deg, #8e2a2a 0%, #4a1212 100%); 
 }
 
-/* Lobby- & Re-Use-Buttons (Holz-/Gold-Look) */
 .btn-lobby {
     background: linear-gradient(180deg, #4a3b2c 0%, #241a12 100%);
     border: 2px solid var(--gold-border);
@@ -174,36 +169,21 @@ input:focus {
     margin-top: 5px; 
 }
 
-.payment-box { 
-    background-color: rgba(20, 20, 20, 0.8); 
-    padding: 20px; 
-    border-radius: 8px; 
-    margin-bottom: 25px; 
-    border: 1px solid var(--gold-border); 
-    text-align: left;
-}
-
-.payment-methods { display: flex; gap: 20px; margin-bottom: 20px; }
-
 /* ==========================================================================
-   4. SPIELTISCH (GAME VIEW) - FESTES LAYOUT & HOLZ-/LEDER-RAHMEN
+   4. SPIELTISCH & INTEGRATIVE SEITENLEISTEN (LINKS & RECHTS)
    ========================================================================== */
 #game-table {
     position: relative;
-    /* Radialer Verlauf für edlen, dunkelgrünen Filzeffekt */
     background: radial-gradient(circle, #0c4d26 0%, #052612 85%, #021208 100%);
-    
-    /* Dreifacher Rahmen: Holz außen, rotes Leder innen, goldene Trennleiste */
     border: 16px solid var(--casino-border); 
     border-radius: 35px;
     box-shadow: 
-        inset 0 0 0 14px #67141f, /* Rote Leder-Polsterung */
-        inset 0 0 0 16px #c4a159, /* Goldene Trennlinie */
+        inset 0 0 0 14px #67141f,
+        inset 0 0 0 16px #c4a159,
         inset 0 0 50px rgba(0, 0, 0, 0.8),
         0 20px 40px rgba(0, 0, 0, 0.7);
-        
-    height: 650px;
-    padding: 30px;
+    min-height: 620px;
+    padding: 25px;
     overflow: hidden; 
 }
 
@@ -217,30 +197,145 @@ input:focus {
 
 .hidden { display: none !important; }
 
+/* Linker Seitenbereich (Status oben, Buttons unten) */
+#left-sidebar {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    bottom: 30px;
+    width: 170px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 20;
+    pointer-events: none;
+}
+
+#left-sidebar button, #left-sidebar a {
+    pointer-events: auto;
+}
+
+#side-status-box {
+    background: rgba(10, 20, 15, 0.85);
+    border: 1px solid var(--gold-border);
+    border-radius: 8px;
+    padding: 10px;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.side-title {
+    font-size: 13px;
+    color: var(--gold-text);
+    border-bottom: 1px solid rgba(184, 148, 77, 0.4);
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+#side-result-msg {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+#side-end-controls {
+    width: 100%;
+}
+
+/* Rechter Seitenbereich (Pots & 3D Chips) */
+#right-sidebar {
+    position: absolute;
+    right: 30px;
+    top: 35px;
+    width: 160px;
+    z-index: 20;
+}
+
+#pots-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pot-box {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px dashed rgba(226, 194, 105, 0.5);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+}
+
+.pot-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--gold-text);
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+/* 3D Chip Stapel */
+.pot-chip-stack {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.stack-chip {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 3px dashed rgba(255, 255, 255, 0.85);
+    font-size: 11px;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -32px; /* Schichtet die Chips übereinander */
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 3px rgba(0, 0, 0, 0.35);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
+    transform: rotateX(45deg);
+}
+
+/* Farbcodes für alle Chip-Werte */
+.chip-val-1    { background: radial-gradient(circle, #dcdde1 0%, #718093 100%); color: #2f3640; text-shadow: none; }
+.chip-val-2    { background: radial-gradient(circle, #7f8fa6 0%, #353b48 100%); }
+.chip-val-5    { background: radial-gradient(circle, #e74c3c 0%, #c0392b 100%); }
+.chip-val-10   { background: radial-gradient(circle, #2980b9 0%, #1f618d 100%); }
+.chip-val-20   { background: radial-gradient(circle, #27ae60 0%, #1e8449 100%); }
+.chip-val-50   { background: radial-gradient(circle, #e67e22 0%, #d35400 100%); }
+.chip-val-100  { background: radial-gradient(circle, #8e44ad 0%, #6c3483 100%); }
+.chip-val-200  { background: radial-gradient(circle, #16a085 0%, #117a65 100%); }
+.chip-val-500  { background: radial-gradient(circle, #d35400 0%, #a04000 100%); }
+.chip-val-1000 { background: radial-gradient(circle, #f1c40f 0%, #b7950b 100%); color: #000; text-shadow: none; }
+
 /* ==========================================================================
-   5. KARTEN & LEGE-ANIMATION (3D PERSPEKTIVE)
+   5. KARTEN & PERSPEKTIVE
    ========================================================================== */
 .card-container, .hand-cards {
     perspective: 800px;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
-    width: 300px;
-    margin: 15px auto;
+    width: 280px;
+    margin: 10px auto;
     min-height: 110px;
 }
 
 .card {
-    width: 75px;
-    height: 110px;
+    width: 70px;
+    height: 102px;
     background-color: var(--card-white);
     border-radius: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     box-shadow: 3px 6px 15px rgba(0, 0, 0, 0.5);
     flex-shrink: 0;
@@ -252,7 +347,6 @@ input:focus {
 
 .card.dealt {
     opacity: 1;
-    /* Leicht schräg stehender Winkel auf das Board */
     transform: rotateX(20deg) rotateY(-4deg) translate(0, 0);
 }
 
@@ -271,7 +365,7 @@ input:focus {
 #player-hands-container {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     margin-top: 10px;
 }
 
@@ -279,7 +373,7 @@ input:focus {
     background: rgba(0, 0, 0, 0.35);
     border: 2px solid var(--gold-border);
     border-radius: 12px;
-    padding: 15px;
+    padding: 10px;
     box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8), 0 4px 8px rgba(0, 0, 0, 0.4);
     color: var(--gold-text);
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
@@ -288,7 +382,7 @@ input:focus {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-width: 250px;
+    min-width: 220px;
 }
 
 .player-hand.active-hand {
@@ -300,15 +394,15 @@ input:focus {
 .hand-cards {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 10px;
-    min-height: 120px;
-    margin-top: 10px;
+    gap: 8px;
+    min-height: 110px;
+    margin-top: 5px;
 }
 
 /* ==========================================================================
-   7. JETON-BUTTONS (SCHNELL-EINSATZ)
+   7. JETON-BUTTONS (SCHNELL-EINSATZ IM OVERLAY)
    ========================================================================== */
 .quick-bets {
     display: flex;
@@ -318,13 +412,13 @@ input:focus {
 }
 
 .btn-chip {
-    width: 65px;
-    height: 65px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     border: 3px dashed rgba(255, 255, 255, 0.8);
     font-family: 'Georgia', serif;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
     color: #ffffff;
     cursor: pointer;
     display: flex;
@@ -343,23 +437,7 @@ input:focus {
     transform: translateY(1px) scale(0.95);
 }
 
-/* Farbvarianten der Jetons */
-.chip-5 {
-    background: radial-gradient(circle, #e74c3c 0%, #a93226 100%);
-    box-shadow: inset 0 0 0 4px #78281f, 0 6px 12px rgba(0, 0, 0, 0.6);
-}
-
-.chip-10 {
-    background: radial-gradient(circle, #2980b9 0%, #1a5276 100%);
-    box-shadow: inset 0 0 0 4px #114b5f, 0 6px 12px rgba(0, 0, 0, 0.6);
-}
-
-.chip-20 {
-    background: radial-gradient(circle, #27ae60 0%, #196f3d 100%);
-    box-shadow: inset 0 0 0 4px #114e2e, 0 6px 12px rgba(0, 0, 0, 0.6);
-}
-
-.chip-50 {
-    background: radial-gradient(circle, #f39c12 0%, #b9770e 100%);
-    box-shadow: inset 0 0 0 4px #7e5109, 0 6px 12px rgba(0, 0, 0, 0.6);
-}
+.chip-5  { background: radial-gradient(circle, #e74c3c 0%, #a93226 100%); box-shadow: inset 0 0 0 4px #78281f, 0 6px 12px rgba(0, 0, 0, 0.6); }
+.chip-10 { background: radial-gradient(circle, #2980b9 0%, #1a5276 100%); box-shadow: inset 0 0 0 4px #114b5f, 0 6px 12px rgba(0, 0, 0, 0.6); }
+.chip-20 { background: radial-gradient(circle, #27ae60 0%, #196f3d 100%); box-shadow: inset 0 0 0 4px #114e2e, 0 6px 12px rgba(0, 0, 0, 0.6); }
+.chip-50 { background: radial-gradient(circle, #f39c12 0%, #b9770e 100%); box-shadow: inset 0 0 0 4px #7e5109, 0 6px 12px rgba(0, 0, 0, 0.6); }

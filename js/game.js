@@ -1,7 +1,5 @@
 /* ==========================================================================
-   BLACKJACK GAME ENGINE (FINALE VERSION)
-   Verantwortlich für Spiellogik, Regeln (Hit, Stand, Split), Live-Punktestand 
-   und saubere Lege-Animationen.
+   BLACKJACK GAME ENGINE
    ========================================================================== */
 
 // --- 1. STATE (ZUSTANDSSPEICHER) ---
@@ -13,21 +11,9 @@ let activeHandIndex = 0;
 
 const suits = ['♥', '♦', '♣', '♠'];
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+const chipValues = [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
 
 // --- 2. WETTEINSATZ & SPIELSTART ---
-
-// Event-Listener für Jeton-Buttons (Schnellauswahl)
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.btn-chip').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const betInput = document.getElementById('bet-input');
-            const addAmount = parseInt(e.currentTarget.getAttribute('data-amount'), 10);
-            let currentBet = parseInt(betInput.value, 10) || 0;
-            betInput.value = currentBet + addAmount;
-        });
-    });
-});
-
 function placeBet() {
     const betInput = document.getElementById('bet-input').value;
     const bet = parseInt(betInput, 10);
@@ -46,19 +32,32 @@ function placeBet() {
     saveUser();
     updateGlobalBalanceUI();
 
-    // UI umbauen (Wetteinsatz ausblenden, Tisch einblenden)
+    // UI umbauen
     document.getElementById('bet-overlay').classList.add('hidden');
     document.getElementById('dealer-area').classList.remove('hidden');
     document.getElementById('player-area').classList.remove('hidden');
-    document.getElementById('game-result').classList.add('hidden');
     
+    // Sidebars zurücksetzen
+    document.getElementById('side-status-box').classList.add('hidden');
+    document.getElementById('side-end-controls').classList.add('hidden');
+
     startRound();
+}
+
+// Neustart der Runde über den neuen Button auf dem Tisch
+function restartRound() {
+    document.getElementById('side-status-box').classList.add('hidden');
+    document.getElementById('side-end-controls').classList.add('hidden');
+    document.getElementById('bet-overlay').classList.remove('hidden');
+    document.getElementById('dealer-area').classList.add('hidden');
+    document.getElementById('player-area').classList.add('hidden');
+    document.getElementById('game-controls').classList.add('hidden');
+    document.getElementById('pots-container').innerHTML = '';
 }
 
 // --- 3. KARTEN & DECK LOGIK ---
 function buildDeck() {
     deck = [];
-    // 6 Decks (Casino-Standard)
     for (let i = 0; i < 6; i++) {
         for (let suit of suits) {
             for (let value of values) {
@@ -66,7 +65,6 @@ function buildDeck() {
             }
         }
     }
-    // Mischen
     deck.sort(() => Math.random() - 0.5);
 }
 
@@ -85,7 +83,6 @@ function calculateScore(cards) {
         if (card.value === 'A') aces++;
     });
     
-    // Wenn über 21 und Asse vorhanden, Asse als 1 statt 11 werten
     while (score > 21 && aces > 0) {
         score -= 10;
         aces--;
@@ -93,7 +90,7 @@ function calculateScore(cards) {
     return score;
 }
 
-// --- 4. HILFSFUNKTION: LIVE-PUNKTESTAND AKTUALISIEREN ---
+// --- 4. HILFSFUNKTIONEN & POT 3D CHIPS ---
 function updatePlayerScore(idx) {
     const header = document.getElementById(`hand-header-${idx}`);
     if (header) {
@@ -102,7 +99,53 @@ function updatePlayerScore(idx) {
     }
 }
 
-// --- 5. ANIMATIONEN (ASYNC/AWAIT) ---
+// Berechnet die optimale Chip-Aufteilung für den 3D-Stapel
+function getChipBreakdown(amount) {
+    const result = [];
+    let rem = amount;
+    for (let val of chipValues) {
+        while (rem >= val) {
+            result.push(val);
+            rem -= val;
+        }
+    }
+    return result;
+}
+
+// Rendert die Pots auf der rechten Seite des Spielfelds
+function renderPots() {
+    const container = document.getElementById('pots-container');
+    container.innerHTML = '';
+
+    playerHands.forEach((hand, idx) => {
+        const potAmount = hand.bet * 2; // Pot ist immer das Doppelte des Wetteinsatzes
+        const chips = getChipBreakdown(potAmount);
+
+        const potBox = document.createElement('div');
+        potBox.className = 'pot-box';
+
+        const title = document.createElement('div');
+        title.className = 'pot-title';
+        title.innerText = playerHands.length > 1 ? `Pot ${idx + 1}: ${potAmount} €` : `Pot: ${potAmount} €`;
+        potBox.appendChild(title);
+
+        const stack = document.createElement('div');
+        stack.className = 'pot-chip-stack';
+
+        // Chips vom kleinsten zum größten stapeln
+        chips.reverse().forEach(val => {
+            const chip = document.createElement('div');
+            chip.className = `stack-chip chip-val-${val}`;
+            chip.innerText = val;
+            stack.appendChild(chip);
+        });
+
+        potBox.appendChild(stack);
+        container.appendChild(potBox);
+    });
+}
+
+// --- 5. ANIMATIONEN ---
 function dealCardAnim(card, containerId, isHidden = false) {
     return new Promise(resolve => {
         const container = document.getElementById(containerId);
@@ -120,10 +163,9 @@ function dealCardAnim(card, containerId, isHidden = false) {
         
         container.appendChild(cardEl);
         
-        // Kurzer Delay für CSS Transition
         setTimeout(() => {
             cardEl.classList.add('dealt');
-            setTimeout(resolve, 400); // 400ms warten, passend zur CSS Transition
+            setTimeout(resolve, 400);
         }, 50);
     });
 }
@@ -135,10 +177,11 @@ async function startRound() {
     playerHands = [{ cards: [], bet: baseBet, isBust: false, isFinished: false }];
     activeHandIndex = 0;
     
+    renderPots();
+
     document.getElementById('dealer-cards').innerHTML = '';
     document.getElementById('dealer-score').innerText = '';
 
-    // Spielerbereich mit Überschrift und Kartencontainer initialisieren
     const container = document.getElementById('player-hands-container');
     container.innerHTML = `
         <div id="hand-0" class="player-hand active-hand">
@@ -149,7 +192,6 @@ async function startRound() {
 
     const pHand = playerHands[0].cards;
     
-    // Karten abwechselnd animiert austeilen
     pHand.push(deck.pop());
     await dealCardAnim(pHand[0], 'cards-container-0');
     updatePlayerScore(0);
@@ -162,7 +204,7 @@ async function startRound() {
     updatePlayerScore(0);
     
     dealerHand.cards.push(deck.pop());
-    await dealCardAnim(dealerHand.cards[1], 'dealer-cards', true); // Verdeckt
+    await dealCardAnim(dealerHand.cards[1], 'dealer-cards', true);
 
     document.getElementById('game-controls').classList.remove('hidden');
     updateControls();
@@ -172,15 +214,13 @@ function updateControls() {
     const hand = playerHands[activeHandIndex];
     if (!hand) return;
 
-    // --- SPLIT-REGELN ---
     const isTwoCards = hand.cards.length === 2;
     const sameValue = isTwoCards && (getCardWeight(hand.cards[0].value) === getCardWeight(hand.cards[1].value));
     const enoughMoney = user.balance >= baseBet;
-    const underMaxHands = playerHands.length < 4; // Max 3 Splits = 4 Hände
+    const underMaxHands = playerHands.length < 4;
 
     document.getElementById('btn-split').disabled = !(sameValue && enoughMoney && underMaxHands);
 
-    // Aktive Hand visuell hervorheben
     document.querySelectorAll('.player-hand').forEach((el, index) => {
         el.classList.toggle('active-hand', index === activeHandIndex);
     });
@@ -221,17 +261,16 @@ async function split() {
     
     const currentHand = playerHands[activeHandIndex];
     
-    // Einsatz für neue Hand abbuchen
     user.balance -= baseBet;
     saveUser();
     updateGlobalBalanceUI();
 
-    // Hand aufteilen
     const splitCard = currentHand.cards.pop();
     const newHand = { cards: [splitCard], bet: baseBet, isBust: false, isFinished: false };
     playerHands.splice(activeHandIndex + 1, 0, newHand);
 
-    // UI für alle Hände komplett neu aufbauen
+    renderPots(); // Pots aktualisieren (zweiten Pot darstellen)
+
     const container = document.getElementById('player-hands-container');
     container.innerHTML = '';
     
@@ -265,7 +304,6 @@ async function split() {
 
     updateControls();
 
-    // Für beide Hände je eine neue Karte animiert ziehen
     const newCard1 = deck.pop();
     currentHand.cards.push(newCard1);
     await dealCardAnim(newCard1, `cards-container-${activeHandIndex}`);
@@ -300,22 +338,22 @@ async function playDealer() {
     document.getElementById('game-controls').classList.add('hidden');
     document.querySelectorAll('.player-hand').forEach(el => el.classList.remove('active-hand'));
     
-    // Verdeckte Karte aufdecken
     const hiddenCardEl = document.getElementById('dealer-hidden-card');
-    hiddenCardEl.classList.remove('hidden-card');
-    const revealedCard = dealerHand.cards[1];
-    
-    if (revealedCard.suit === '♥' || revealedCard.suit === '♦') hiddenCardEl.classList.add('red');
-    else hiddenCardEl.classList.add('black');
-    
-    hiddenCardEl.innerText = `${revealedCard.value} ${revealedCard.suit}`;
+    if (hiddenCardEl) {
+        hiddenCardEl.classList.remove('hidden-card');
+        const revealedCard = dealerHand.cards[1];
+        
+        if (revealedCard.suit === '♥' || revealedCard.suit === '♦') hiddenCardEl.classList.add('red');
+        else hiddenCardEl.classList.add('black');
+        
+        hiddenCardEl.innerText = `${revealedCard.value} ${revealedCard.suit}`;
+    }
 
     document.getElementById('dealer-score').innerText = `(${calculateScore(dealerHand.cards)})`;
 
     const allBust = playerHands.every(h => h.isBust);
     
     if (!allBust) {
-        // Dealer zieht bis 17
         while (calculateScore(dealerHand.cards) < 17) {
             const newCard = deck.pop();
             dealerHand.cards.push(newCard);
@@ -345,7 +383,7 @@ function determineWinners() {
                 totalWinnings += (hand.bet * 2);
                 resultText += `${handNum}Gewonnen!<br>`;
             } else if (playerScore === dealerScore) {
-                totalWinnings += hand.bet; // Push (Unentschieden)
+                totalWinnings += hand.bet;
                 resultText += `${handNum}Unentschieden (Push)<br>`;
             } else {
                 resultText += `${handNum}Verloren gegen Dealer<br>`;
@@ -357,13 +395,28 @@ function determineWinners() {
     saveUser();
     updateGlobalBalanceUI();
 
-    const resultDiv = document.getElementById('game-result');
-    const resultMsg = document.getElementById('result-msg');
-    
     let moneyText = totalWinnings > 0 
-        ? `<br><span style="color:var(--secondary-color);">+ ${totalWinnings} € gutgeschrieben!</span>` 
-        : `<br><span style="color:var(--danger-color);">Kein Gewinn in dieser Runde.</span>`;
-        
-    resultMsg.innerHTML = resultText + moneyText;
-    resultDiv.classList.remove('hidden');
+        ? `<span style="color:var(--secondary-color); font-weight:bold;">+ ${totalWinnings} €</span>` 
+        : `<span style="color:var(--danger-color);">Kein Gewinn.</span>`;
+
+    // Ergebnis im linken Seitenbereich auf dem Tisch anzeigen (verkleinert)
+    const sideBox = document.getElementById('side-status-box');
+    const sideMsg = document.getElementById('side-result-msg');
+    const sideControls = document.getElementById('side-end-controls');
+
+    sideMsg.innerHTML = resultText + moneyText;
+    sideBox.classList.remove('hidden');
+    sideControls.classList.remove('hidden');
 }
+
+// --- 9. EVENT-LISTENER FÜR JETON-SCHNELLWETEN ---
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-chip').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const betInput = document.getElementById('bet-input');
+            const addAmount = parseInt(e.currentTarget.getAttribute('data-amount'), 10);
+            let currentBet = parseInt(betInput.value, 10) || 0;
+            betInput.value = currentBet + addAmount;
+        });
+    });
+});
