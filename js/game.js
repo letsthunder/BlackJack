@@ -44,7 +44,7 @@ function placeBet() {
     startRound();
 }
 
-// Neustart der Runde über den neuen Button auf dem Tisch
+// Neustart der Runde
 function restartRound() {
     document.getElementById('side-status-box').classList.add('hidden');
     document.getElementById('side-end-controls').classList.add('hidden');
@@ -90,7 +90,7 @@ function calculateScore(cards) {
     return score;
 }
 
-// --- 4. HILFSFUNKTIONEN & POT 3D CHIPS ---
+// --- 4. HILFSFUNKTIONEN & POT 3D CHIPS (SORTIERT NACH WERTIGKEIT) ---
 function updatePlayerScore(idx) {
     const header = document.getElementById(`hand-header-${idx}`);
     if (header) {
@@ -99,27 +99,28 @@ function updatePlayerScore(idx) {
     }
 }
 
-// Berechnet die optimale Chip-Aufteilung für den 3D-Stapel
-function getChipBreakdown(amount) {
-    const result = [];
+// Berechnet die Anzahl der jeweiligen Chips nach Wertigkeit
+function getChipCounts(amount) {
+    const counts = {};
     let rem = amount;
     for (let val of chipValues) {
-        while (rem >= val) {
-            result.push(val);
-            rem -= val;
+        let qty = Math.floor(rem / val);
+        if (qty > 0) {
+            counts[val] = qty;
+            rem %= val;
         }
     }
-    return result;
+    return counts;
 }
 
-// Rendert die Pots auf der rechten Seite des Spielfelds
+// Rendert die Pots auf der rechten Seite des Spielfelds mit Wertsrtierten Stapeln
 function renderPots() {
     const container = document.getElementById('pots-container');
     container.innerHTML = '';
 
     playerHands.forEach((hand, idx) => {
-        const potAmount = hand.bet * 2; // Pot ist immer das Doppelte des Wetteinsatzes
-        const chips = getChipBreakdown(potAmount);
+        const potAmount = hand.bet * 2; // Pot = doppelter Einsatz
+        const chipCounts = getChipCounts(potAmount);
 
         const potBox = document.createElement('div');
         potBox.className = 'pot-box';
@@ -129,18 +130,27 @@ function renderPots() {
         title.innerText = playerHands.length > 1 ? `Pot ${idx + 1}: ${potAmount} €` : `Pot: ${potAmount} €`;
         potBox.appendChild(title);
 
-        const stack = document.createElement('div');
-        stack.className = 'pot-chip-stack';
+        const stacksFlex = document.createElement('div');
+        stacksFlex.className = 'pot-stacks-flex';
 
-        // Chips vom kleinsten zum größten stapeln
-        chips.reverse().forEach(val => {
-            const chip = document.createElement('div');
-            chip.className = `stack-chip chip-val-${val}`;
-            chip.innerText = val;
-            stack.appendChild(chip);
-        });
+        // Jeder Chip-Wert bekommt seinen eigenen Stapel
+        for (let val of chipValues) {
+            if (chipCounts[val]) {
+                const qty = chipCounts[val];
+                const stack = document.createElement('div');
+                stack.className = 'pot-chip-stack';
 
-        potBox.appendChild(stack);
+                for (let i = 0; i < qty; i++) {
+                    const chip = document.createElement('div');
+                    chip.className = `stack-chip chip-val-${val}`;
+                    chip.innerText = val;
+                    stack.appendChild(chip);
+                }
+                stacksFlex.appendChild(stack);
+            }
+        }
+
+        potBox.appendChild(stacksFlex);
         container.appendChild(potBox);
     });
 }
@@ -269,7 +279,7 @@ async function split() {
     const newHand = { cards: [splitCard], bet: baseBet, isBust: false, isFinished: false };
     playerHands.splice(activeHandIndex + 1, 0, newHand);
 
-    renderPots(); // Pots aktualisieren (zweiten Pot darstellen)
+    renderPots(); // Zweite Hand -> Zweiter Pot
 
     const container = document.getElementById('player-hands-container');
     container.innerHTML = '';
@@ -396,10 +406,9 @@ function determineWinners() {
     updateGlobalBalanceUI();
 
     let moneyText = totalWinnings > 0 
-        ? `<span style="color:var(--secondary-color); font-weight:bold;">+ ${totalWinnings} €</span>` 
-        : `<span style="color:var(--danger-color);">Kein Gewinn.</span>`;
+        ? `<div style="color:var(--secondary-color); font-weight:bold; font-size: 18px; margin-top:5px;">+ ${totalWinnings} €</div>` 
+        : `<div style="color:var(--danger-color); font-size: 15px; margin-top:5px;">Kein Gewinn.</div>`;
 
-    // Ergebnis im linken Seitenbereich auf dem Tisch anzeigen (verkleinert)
     const sideBox = document.getElementById('side-status-box');
     const sideMsg = document.getElementById('side-result-msg');
     const sideControls = document.getElementById('side-end-controls');
@@ -409,7 +418,7 @@ function determineWinners() {
     sideControls.classList.remove('hidden');
 }
 
-// --- 9. EVENT-LISTENER FÜR JETON-SCHNELLWETEN ---
+// --- 9. EVENT-LISTENER FÜR JETON-SCHNELLWETTEN ---
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.btn-chip').forEach(button => {
         button.addEventListener('click', (e) => {

@@ -21,7 +21,7 @@
         <!-- Das eigentliche Spielfeld (grüner Tisch) -->
         <main id="game-table">
             
-            <!-- Linker Seitenbereich (Status oben auf Dealer-Höhe, Nav-Buttons unten auf Spieler-Höhe) -->
+            <!-- Linker Seitenbereich (Status oben vergrößert, nur "Neue Runde"-Button unten) -->
             <div id="left-sidebar">
                 <div id="side-status-box" class="hidden">
                     <h4 class="side-title">Rundenergebnis</h4>
@@ -29,12 +29,11 @@
                 </div>
                 
                 <div id="side-end-controls" class="hidden">
-                    <button onclick="restartRound()" class="btn btn-primary btn-sm btn-full">Neue Runde</button>
-                    <a href="dashboard.html" class="btn btn-secondary btn-sm btn-full btn-lobby" style="margin-top: 8px;">Zur Lobby</a>
+                    <button onclick="restartRound()" class="btn btn-primary btn-full">Neue Runde</button>
                 </div>
             </div>
 
-            <!-- Rechter Seitenbereich (Pot-Anzeige(n) mit 3D-Chips auf Dealer-Höhe) -->
+            <!-- Rechter Seitenbereich (Vergrößerter Pot mit sortierten 3D-Chip-Stapeln) -->
             <div id="right-sidebar">
                 <div id="pots-container">
                     <!-- Dynamisch per JS generiert -->

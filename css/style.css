@@ -52,7 +52,7 @@ body {
 }
 
 .game-container {
-    max-width: 1050px;
+    max-width: 1100px;
     padding: 20px;
 }
 
@@ -128,7 +128,6 @@ input:focus {
 .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.6); }
 .btn-full { width: 100%; }
 .btn-large { padding: 15px 30px; font-size: 18px; width: 100%; margin-bottom: 15px; }
-.btn-sm { padding: 8px 12px; font-size: 13px; }
 
 .btn-primary { 
     background: linear-gradient(180deg, #3b638c 0%, #1e3650 100%); 
@@ -170,7 +169,7 @@ input:focus {
 }
 
 /* ==========================================================================
-   4. SPIELTISCH & INTEGRATIVE SEITENLEISTEN (LINKS & RECHTS)
+   4. SPIELTISCH & SEITENLEISTEN (VERGRÖSSERTE ANZEIGEN)
    ========================================================================== */
 #game-table {
     position: relative;
@@ -182,7 +181,7 @@ input:focus {
         inset 0 0 0 16px #c4a159,
         inset 0 0 50px rgba(0, 0, 0, 0.8),
         0 20px 40px rgba(0, 0, 0, 0.7);
-    min-height: 620px;
+    min-height: 640px;
     padding: 25px;
     overflow: hidden; 
 }
@@ -197,13 +196,13 @@ input:focus {
 
 .hidden { display: none !important; }
 
-/* Linker Seitenbereich (Status oben, Buttons unten) */
+/* Linker Seitenbereich (Status vergrößert, einzelner Nächste-Runde-Button) */
 #left-sidebar {
     position: absolute;
-    left: 30px;
-    top: 30px;
-    bottom: 30px;
-    width: 170px;
+    left: 25px;
+    top: 25px;
+    bottom: 25px;
+    width: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -211,43 +210,45 @@ input:focus {
     pointer-events: none;
 }
 
-#left-sidebar button, #left-sidebar a {
+#left-sidebar button {
     pointer-events: auto;
 }
 
 #side-status-box {
-    background: rgba(10, 20, 15, 0.85);
-    border: 1px solid var(--gold-border);
-    border-radius: 8px;
-    padding: 10px;
+    background: rgba(10, 20, 15, 0.9);
+    border: 2px solid var(--gold-border);
+    border-radius: 10px;
+    padding: 14px;
     color: #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
 }
 
 .side-title {
-    font-size: 13px;
+    font-size: 16px;
     color: var(--gold-text);
-    border-bottom: 1px solid rgba(184, 148, 77, 0.4);
-    padding-bottom: 4px;
-    margin-bottom: 6px;
+    border-bottom: 1px solid rgba(184, 148, 77, 0.5);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 #side-result-msg {
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 500;
 }
 
 #side-end-controls {
     width: 100%;
 }
 
-/* Rechter Seitenbereich (Pots & 3D Chips) */
+/* Rechter Seitenbereich (Vergrößerter Pot & Flex-Stapel für 3D-Chips) */
 #right-sidebar {
     position: absolute;
-    right: 30px;
-    top: 35px;
-    width: 160px;
+    right: 25px;
+    top: 25px;
+    width: 230px;
     z-index: 20;
 }
 
@@ -258,46 +259,57 @@ input:focus {
 }
 
 .pot-box {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px dashed rgba(226, 194, 105, 0.5);
-    border-radius: 8px;
-    padding: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px dashed rgba(226, 194, 105, 0.6);
+    border-radius: 12px;
+    padding: 12px;
     text-align: center;
 }
 
 .pot-title {
-    font-size: 13px;
+    font-size: 18px;
     font-weight: bold;
     color: var(--gold-text);
-    margin-bottom: 8px;
-    text-shadow: 1px 1px 2px #000;
+    margin-bottom: 12px;
+    text-shadow: 1px 1px 3px #000;
 }
 
-/* 3D Chip Stapel */
+/* Flex-Container richtet Chip-Stapel nebeneinander aus */
+.pot-stacks-flex {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: flex-end;
+    min-height: 60px;
+    padding-top: 10px;
+}
+
 .pot-chip-stack {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
-    padding-bottom: 10px;
+    margin-bottom: 25px; /* Abstand für überlappenden Chip-Stapel */
 }
 
+/* 3D Chip Styling */
 .stack-chip {
-    width: 48px;
-    height: 48px;
+    width: 54px;
+    height: 54px;
     border-radius: 50%;
     border: 3px dashed rgba(255, 255, 255, 0.85);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: bold;
     color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: -32px; /* Schichtet die Chips übereinander */
+    margin-bottom: -40px; /* Stapelt Chips derselben Wertigkeit vertikal */
     box-shadow: 
-        0 4px 6px rgba(0, 0, 0, 0.7),
+        0 5px 8px rgba(0, 0, 0, 0.7),
         inset 0 0 0 3px rgba(0, 0, 0, 0.35);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9);
-    transform: rotateX(45deg);
+    transform: rotateX(40deg);
 }
 
 /* Farbcodes für alle Chip-Werte */
