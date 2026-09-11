@@ -15,6 +15,19 @@ const suits = ['♥', '♦', '♣', '♠'];
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
 // --- 2. WETTEINSATZ & SPIELSTART ---
+
+// Event-Listener für Jeton-Buttons (Schnellauswahl)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-chip').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const betInput = document.getElementById('bet-input');
+            const addAmount = parseInt(e.currentTarget.getAttribute('data-amount'), 10);
+            let currentBet = parseInt(betInput.value, 10) || 0;
+            betInput.value = currentBet + addAmount;
+        });
+    });
+});
+
 function placeBet() {
     const betInput = document.getElementById('bet-input').value;
     const bet = parseInt(betInput, 10);

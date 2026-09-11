@@ -306,3 +306,60 @@ input:focus {
     min-height: 120px;
     margin-top: 10px;
 }
+
+/* ==========================================================================
+   7. JETON-BUTTONS (SCHNELL-EINSATZ)
+   ========================================================================== */
+.quick-bets {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+.btn-chip {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: 3px dashed rgba(255, 255, 255, 0.8);
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-chip:hover {
+    transform: translateY(-4px) scale(1.08);
+    filter: brightness(1.2);
+}
+
+.btn-chip:active {
+    transform: translateY(1px) scale(0.95);
+}
+
+/* Farbvarianten der Jetons */
+.chip-5 {
+    background: radial-gradient(circle, #e74c3c 0%, #a93226 100%);
+    box-shadow: inset 0 0 0 4px #78281f, 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.chip-10 {
+    background: radial-gradient(circle, #2980b9 0%, #1a5276 100%);
+    box-shadow: inset 0 0 0 4px #114b5f, 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.chip-20 {
+    background: radial-gradient(circle, #27ae60 0%, #196f3d 100%);
+    box-shadow: inset 0 0 0 4px #114e2e, 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.chip-50 {
+    background: radial-gradient(circle, #f39c12 0%, #b9770e 100%);
+    box-shadow: inset 0 0 0 4px #7e5109, 0 6px 12px rgba(0, 0, 0, 0.6);
+}

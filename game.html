@@ -12,7 +12,7 @@
         
         <!-- Kopfbereich: Navigation und Live-Guthaben -->
         <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <a href="dashboard.html" class="btn btn-secondary">🔙 Zur Lobby</a>
+            <a href="dashboard.html" class="btn btn-secondary btn-lobby">🔙 Zur Lobby</a>
             <div class="balance-widget" style="margin: 0; padding: 10px 20px;">
                 Guthaben: <strong class="balance-amount"><span class="balance-display">0</span> €</strong>
             </div>
@@ -23,9 +23,18 @@
             
             <!-- 1. Overlay für den Wetteinsatz (wird nach Bestätigung ausgeblendet) -->
             <div id="bet-overlay">
-                <h2 style="color: white; margin-bottom: 20px; font-size: 32px;">Ihren Einsatz bitte</h2>
+                <h2 style="color: white; margin-bottom: 15px; font-size: 32px;">Ihren Einsatz bitte</h2>
+                
+                <!-- Schnellauswahl-Buttons (Jetons) -->
+                <div class="quick-bets">
+                    <button type="button" class="btn-chip chip-5" data-amount="5">+5 €</button>
+                    <button type="button" class="btn-chip chip-10" data-amount="10">+10 €</button>
+                    <button type="button" class="btn-chip chip-20" data-amount="20">+20 €</button>
+                    <button type="button" class="btn-chip chip-50" data-amount="50">+50 €</button>
+                </div>
+
                 <div class="form-group" style="width: 250px;">
-                    <input type="number" id="bet-input" placeholder="Einsatz in €" min="1" required style="text-align: center; font-size: 24px; font-weight: bold;">
+                    <input type="number" id="bet-input" placeholder="Einsatz in €" value="10" min="1" required style="text-align: center; font-size: 24px; font-weight: bold;">
                 </div>
                 <button onclick="placeBet()" class="btn btn-secondary btn-large" style="width: 250px;">Karten geben (Deal)</button>
             </div>
