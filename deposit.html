@@ -1,108 +1,157 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konto aufladen - Blackjack Web-App</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Spezifisches Styling nur für die Kassen-Ansicht */
-        .payment-box {
-            background-color: #353b48;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            text-align: left;
-            border: 1px solid #7f8fa6;
+<!DOCTYPE html> 
+<html lang="de"> 
+<head>     
+    <meta charset="UTF-8">     
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">     
+    <title>Konto aufladen - Blackjack Web-App</title>     
+    <link rel="stylesheet" href="css/style.css">     
+    <style>         
+        /* Spezifisches Styling nur für die Kassen-Ansicht */         
+        .payment-box {             
+            background-color: #353b48;             
+            padding: 20px;             
+            border-radius: 8px;             
+            margin-bottom: 25px;             
+            text-align: left;             
+            border: 1px solid #7f8fa6;         
+        }         
+        .payment-methods {             
+            margin-bottom: 20px;             
+            display: flex;             
+            gap: 20px;         
+        }         
+        .payment-methods label {             
+            cursor: pointer;             
+            font-size: 16px;         
+        }         
+        .card-details-row {             
+            display: flex;             
+            gap: 10px;         
         }
-        .payment-methods {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 20px;
-        }
-        .payment-methods label {
-            cursor: pointer;
+        /* Neues Styling für den PayPal Button */
+        .paypal-btn {
+            background-color: #0070ba;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
             font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
         }
-        .card-details-row {
-            display: flex;
-            gap: 10px;
+        .paypal-btn:hover {
+            background-color: #005ea6;
         }
-    </style>
-</head>
-<body class="deposit-page">
-
-    <div class="container deposit-container">
-        <h1>Kasse</h1>
-        <p class="subtitle">Aktuelles Guthaben: <strong class="balance-amount"><span id="balance-display">0</span> €</strong></p>
-
-        <!-- Formular für die fiktive Aufladung -->
-        <form id="deposit-form">
-            <div class="payment-box">
-                <h3>Zahlungsmethode</h3>
+    </style> 
+</head> 
+<body class="deposit-page">     
+    <div class="container deposit-container">         
+        <h1>Kasse</h1>         
+        <p class="subtitle">Aktuelles Guthaben: <strong class="balance-amount"><span id="balance-display">0</span> €</strong></p>         
+        
+        <!-- Formular für die fiktive Aufladung -->         
+        <form id="deposit-form">             
+            <div class="payment-box">                 
+                <h3>Zahlungsmethode</h3>                                  
+                <div class="payment-methods">                     
+                    <label><input type="radio" name="payment" value="creditcard" checked> Kreditkarte</label>                     
+                    <label><input type="radio" name="payment" value="paypal"> PayPal</label>                 
+                </div>                 
                 
-                <div class="payment-methods">
-                    <label><input type="radio" name="payment" value="creditcard" checked> 💳 Kreditkarte</label>
-                    <label><input type="radio" name="payment" value="paypal"> 🅿️ PayPal</label>
+                <!-- BEREICH 1: Kreditkarten-Details -->
+                <div id="creditcard-details">
+                    <!-- NEU: Kontoinhaber Feld -->
+                    <div class="form-group">
+                        <input type="text" placeholder="Kontoinhaber (Vor- und Nachname)" required>
+                    </div>
+                    <div class="form-group">                     
+                        <input type="text" placeholder="Kreditkartennummer (16 Ziffern)" required>                 
+                    </div>                                  
+                    <div class="card-details-row form-group">                     
+                        <input type="text" placeholder="MM/YY" required>                     
+                        <input type="text" placeholder="CVC" required>                 
+                    </div>             
                 </div>
 
-                <!-- Fiktive Eingabefelder, um den Prozess realistisch wirken zu lassen -->
-                <div class="form-group">
-                    <input type="text" placeholder="Kreditkartennummer (16 Ziffern)" required>
+                <!-- BEREICH 2: PayPal-Details (Initial versteckt) -->
+                <div id="paypal-details" style="display: none; text-align: center; padding-bottom: 10px;">
+                    <p style="color: #f5f6fa; font-size: 15px;">Du wirst zur sicheren Anmeldung zu PayPal weitergeleitet.</p>
+                    <!-- Ein fiktiver Button, der ein Popup andeutet -->
+                    <button type="button" class="paypal-btn" onclick="alert('Fiktives PayPal-Popup öffnet sich. Für die Fallstudie kannst du einfach normal auf Zahlung bestätigen klicken.')">Mit PayPal anmelden</button>
                 </div>
-                
-                <div class="card-details-row form-group">
-                    <input type="text" placeholder="MM/YY" required>
-                    <input type="text" placeholder="CVC" required>
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label for="deposit-amount">Aufladebetrag (€)</label>
-                <input type="number" id="deposit-amount" placeholder="z.B. 50" min="10" step="10" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-full" style="margin-bottom: 15px;">Zahlung bestätigen</button>
-            <a href="dashboard.html" class="btn btn-secondary btn-full">Abbrechen & Zurück</a>
-        </form>
-    </div>
-
-    <!-- Globale Logik -->
-    <script src="js/app.js"></script>
-    
-    <!-- Seitenspezifische Logik (Aufladen) -->
-    <script>
-        // 1. Sicherheits-Check: Ist der Nutzer eingeloggt?
-        if (!user || !user.username) {
-            window.location.href = 'index.html';
-        } else {
-            // Aktuelles Guthaben beim Laden der Seite anzeigen
-            document.getElementById('balance-display').innerText = user.balance;
-        }
-
-        // 2. Auflade-Event abfangen
-        document.getElementById('deposit-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Verhindert das Neuladen der Seite
+            </div>             
             
-            // Betrag aus dem Eingabefeld als Zahl (Integer) auslesen
-            const amount = parseInt(document.getElementById('deposit-amount').value, 10);
+            <div class="form-group">                 
+                <label for="deposit-amount">Aufladebetrag (€)</label>                 
+                <input type="number" id="deposit-amount" placeholder="z.B. 50" min="10" step="10" required>             
+            </div>             
+            <button type="submit" class="btn btn-primary btn-full" style="margin-bottom: 15px;">Zahlung bestätigen</button>             
+            <a href="dashboard.html" class="btn btn-secondary btn-full">Abbrechen & Zurück</a>         
+        </form>     
+    </div>     
+    
+    <!-- Globale Logik -->     
+    <script src="js/app.js"></script>          
+    
+    <!-- Seitenspezifische Logik (Aufladen) -->     
+    <script>         
+        // 1. Sicherheits-Check: Ist der Nutzer eingeloggt?         
+        if (!user || !user.username) {             
+            window.location.href = 'index.html';         
+        } else {             
+            // Aktuelles Guthaben beim Laden der Seite anzeigen             
+            document.getElementById('balance-display').innerText = user.balance;         
+        }         
 
-            // Prüfen, ob es eine gültige Zahl größer als 0 ist
-            if (!isNaN(amount) && amount > 0) {
-                
-                // Guthaben des Nutzers erhöhen
-                user.balance += amount;
-                
-                // Im LocalStorage speichern (Funktion kommt aus app.js)
-                saveUser(); 
-                
-                // Erfolgsmeldung für die Fallstudie anzeigen
-                alert(`Erfolgreich! Dir wurden ${amount} € gutgeschrieben.`);
-                
-                // Zurück zur Lobby
-                window.location.href = 'dashboard.html';
-            }
+        // NEU: Logik zum Umschalten zwischen Kreditkarte und PayPal
+        const paymentRadios = document.querySelectorAll('input[name="payment"]');
+        const ccDetails = document.getElementById('creditcard-details');
+        const paypalDetails = document.getElementById('paypal-details');
+        const ccInputs = ccDetails.querySelectorAll('input'); // Alle Inputs im Kreditkarten-Bereich
+
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'paypal') {
+                    // Kreditkarte ausblenden, PayPal einblenden
+                    ccDetails.style.display = 'none';
+                    paypalDetails.style.display = 'block';
+                    // "required" (Pflichtfeld) von den Kreditkartenfeldern entfernen, sonst gibt es beim Aufladen einen HTML-Fehler
+                    ccInputs.forEach(input => input.removeAttribute('required'));
+                } else {
+                    // Kreditkarte einblenden, PayPal ausblenden
+                    ccDetails.style.display = 'block';
+                    paypalDetails.style.display = 'none';
+                    // "required" (Pflichtfeld) wieder hinzufügen
+                    ccInputs.forEach(input => input.setAttribute('required', 'true'));
+                }
+            });
         });
-    </script>
-</body>
+
+        // 2. Auflade-Event abfangen         
+        document.getElementById('deposit-form').addEventListener('submit', function(event) {             
+            event.preventDefault(); // Verhindert das Neuladen der Seite                          
+            
+            // Betrag aus dem Eingabefeld als Zahl (Integer) auslesen             
+            const amount = parseInt(document.getElementById('deposit-amount').value, 10);             
+            
+            // Prüfen, ob es eine gültige Zahl größer als 0 ist             
+            if (!isNaN(amount) && amount > 0) {                                  
+                // Guthaben des Nutzers erhöhen                 
+                user.balance += amount;                                  
+                
+                // Im LocalStorage speichern (Funktion kommt aus app.js)                 
+                saveUser();                                   
+                
+                // Erfolgsmeldung für die Fallstudie anzeigen                 
+                alert(`Erfolgreich! Dir wurden ${amount} € gutgeschrieben.`);                                  
+                
+                // Zurück zur Lobby                 
+                window.location.href = 'dashboard.html';             
+            }         
+        });     
+    </script> 
+</body> 
 </html>

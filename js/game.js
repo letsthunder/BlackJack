@@ -11,7 +11,7 @@ let dealerHand = { cards: [] };
 let playerHands = []; // Array für Multi-Hands (wegen Split)
 let activeHandIndex = 0;
 
-const suits = ['♥', '♦', '♣', '♠'];
+const suits = ['♠', '♥', '♦', '♣'];
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
 // --- 2. WETTEINSATZ & SPIELSTART ---
@@ -30,6 +30,10 @@ function placeBet() {
     // Einsatz abziehen und speichern
     user.balance -= bet;
     baseBet = bet;
+    
+    // NEU: Letzten Einsatz im Nutzerobjekt speichern für die nächste Runde
+    user.lastBet = bet; 
+    
     saveUser();
     updateGlobalBalanceUI();
 
@@ -164,9 +168,9 @@ function updateControls() {
     const sameValue = isTwoCards && (getCardWeight(hand.cards[0].value) === getCardWeight(hand.cards[1].value));
     const enoughMoney = user.balance >= baseBet;
     const underMaxHands = playerHands.length < 4; // Max 3 Splits = 4 Hände
-
+    
     document.getElementById('btn-split').disabled = !(sameValue && enoughMoney && underMaxHands);
-
+    
     // Aktive Hand visuell hervorheben
     document.querySelectorAll('.player-hand').forEach((el, index) => {
         el.classList.toggle('active-hand', index === activeHandIndex);
@@ -175,7 +179,7 @@ function updateControls() {
 
 // --- 7. SPIELER AKTIONEN ---
 async function hit() {
-    document.getElementById('game-controls').classList.add('hidden'); 
+    document.getElementById('game-controls').classList.add('hidden');
     
     const hand = playerHands[activeHandIndex];
     const newCard = deck.pop();
@@ -185,6 +189,7 @@ async function hit() {
     updatePlayerScore(activeHandIndex);
     
     const score = calculateScore(hand.cards);
+    
     if (score > 21) {
         hand.isBust = true;
         hand.isFinished = true;
@@ -212,12 +217,12 @@ async function split() {
     user.balance -= baseBet;
     saveUser();
     updateGlobalBalanceUI();
-
+    
     // Hand aufteilen
     const splitCard = currentHand.cards.pop();
     const newHand = { cards: [splitCard], bet: baseBet, isBust: false, isFinished: false };
     playerHands.splice(activeHandIndex + 1, 0, newHand);
-
+    
     // UI für alle Hände komplett neu aufbauen
     const container = document.getElementById('player-hands-container');
     container.innerHTML = '';
@@ -234,7 +239,7 @@ async function split() {
         header.style.marginBottom = '5px';
         header.innerText = `Hand ${idx + 1} (${score})`;
         handDiv.appendChild(header);
-
+        
         const cardsContainer = document.createElement('div');
         cardsContainer.id = `cards-container-${idx}`;
         cardsContainer.className = 'hand-cards';
@@ -245,24 +250,23 @@ async function split() {
             el.innerText = `${c.value} ${c.suit}`;
             cardsContainer.appendChild(el);
         });
-
         handDiv.appendChild(cardsContainer);
         container.appendChild(handDiv);
     });
-
+    
     updateControls();
-
+    
     // Für beide Hände je eine neue Karte animiert ziehen
     const newCard1 = deck.pop();
     currentHand.cards.push(newCard1);
     await dealCardAnim(newCard1, `cards-container-${activeHandIndex}`);
     updatePlayerScore(activeHandIndex);
-
+    
     const newCard2 = deck.pop();
     newHand.cards.push(newCard2);
     await dealCardAnim(newCard2, `cards-container-${activeHandIndex + 1}`);
     updatePlayerScore(activeHandIndex + 1);
-
+    
     if (calculateScore(currentHand.cards) === 21) {
         currentHand.isFinished = true;
         nextHand();
@@ -296,9 +300,8 @@ async function playDealer() {
     else hiddenCardEl.classList.add('black');
     
     hiddenCardEl.innerText = `${revealedCard.value} ${revealedCard.suit}`;
-
     document.getElementById('dealer-score').innerText = `(${calculateScore(dealerHand.cards)})`;
-
+    
     const allBust = playerHands.every(h => h.isBust);
     
     if (!allBust) {
@@ -319,7 +322,7 @@ function determineWinners() {
     const dealerBust = dealerScore > 21;
     let totalWinnings = 0;
     let resultText = "";
-
+    
     playerHands.forEach((hand, idx) => {
         const handNum = playerHands.length > 1 ? `Hand ${idx + 1}: ` : "";
         
@@ -339,18 +342,30 @@ function determineWinners() {
             }
         }
     });
-
+    
     user.balance += totalWinnings;
     saveUser();
     updateGlobalBalanceUI();
-
+    
     const resultDiv = document.getElementById('game-result');
     const resultMsg = document.getElementById('result-msg');
     
-    let moneyText = totalWinnings > 0 
-        ? `<br><span style="color:var(--secondary-color);">+ ${totalWinnings} € gutgeschrieben!</span>` 
+    let moneyText = totalWinnings > 0
+        ? `<br><span style="color:var(--secondary-color);">+ ${totalWinnings} € gutgeschrieben!</span>`
         : `<br><span style="color:var(--danger-color);">Kein Gewinn in dieser Runde.</span>`;
         
     resultMsg.innerHTML = resultText + moneyText;
     resultDiv.classList.remove('hidden');
 }
+
+// ==========================================================================
+// NEU: Beim Laden der Seite prüfen, ob es einen letzten Einsatz gab
+// und diesen in das Eingabefeld einfügen.
+// ==========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Prüfen, ob das Element 'bet-input' existiert und ob wir im user-Objekt den letzten Einsatz gespeichert haben
+    const betInput = document.getElementById('bet-input');
+    if (betInput && user && user.lastBet) {
+        betInput.value = user.lastBet;
+    }
+});
