@@ -6,7 +6,6 @@
     <title>Konto aufladen - Blackjack Web-App</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Spezifisches Styling nur für die Kassen-Ansicht */
         .payment-box {
             background-color: #353b48;
             padding: 20px;
@@ -31,29 +30,56 @@
     </style>
 </head>
 <body class="deposit-page">
-
     <div class="container deposit-container">
+        <!-- BUTTON OBEN LINKS ZUR LOBBY -->
+        <div class="top-bar-left">
+            <a href="dashboard.html" class="btn btn-secondary btn-lobby">Zurück zur Lobby</a>
+        </div>
         <h1>Kasse</h1>
         <p class="subtitle">Aktuelles Guthaben: <strong class="balance-amount"><span id="balance-display">0</span> €</strong></p>
 
-        <!-- Formular für die fiktive Aufladung -->
+        <!-- Formular für die Aufladung -->
         <form id="deposit-form">
             <div class="payment-box">
                 <h3>Zahlungsmethode</h3>
-                
+                                
                 <div class="payment-methods">
                     <label><input type="radio" name="payment" value="creditcard" checked> 💳 Kreditkarte</label>
                     <label><input type="radio" name="payment" value="paypal"> 🅿️ PayPal</label>
                 </div>
 
-                <!-- Fiktive Eingabefelder, um den Prozess realistisch wirken zu lassen -->
-                <div class="form-group">
-                    <input type="text" placeholder="Kreditkartennummer (16 Ziffern)" required>
+                <!-- Felder für Kreditkarte -->
+                <div id="creditcard-fields">
+                    <div class="form-group">
+                        <label for="cc-name">Karteninhaber</label>
+                        <input type="text" id="cc-name" placeholder="Max Mustermann" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cc-number">Kartennummer</label>
+                        <input type="text" id="cc-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+                    <div class="card-details-row form-group">
+                        <div style="flex: 1;">
+                            <label for="cc-expiry">Ablaufdatum (MM/YY)</label>
+                            <input type="text" id="cc-expiry" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="cc-cvc">Prüfnummer (3-stellig)</label>
+                            <input type="text" id="cc-cvc" placeholder="CVC" maxlength="3" required>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="card-details-row form-group">
-                    <input type="text" placeholder="MM/YY" required>
-                    <input type="text" placeholder="CVC" required>
+
+                <!-- Felder für PayPal -->
+                <div id="paypal-fields" class="hidden">
+                    <div class="form-group">
+                        <label for="pp-account">E-Mail oder Telefonnummer</label>
+                        <input type="text" id="pp-account" placeholder="name@beispiel.de oder +49...">
+                    </div>
+                    <div class="form-group">
+                        <label for="pp-password">Passwort</label>
+                        <input type="password" id="pp-password" placeholder="Passwort">
+                    </div>
                 </div>
             </div>
 
@@ -65,41 +91,146 @@
             <button type="submit" class="btn btn-primary btn-full" style="margin-bottom: 15px;">Zahlung bestätigen</button>
             <a href="dashboard.html" class="btn btn-secondary btn-full">Abbrechen & Zurück</a>
         </form>
+
+        <!-- 1-Klick-Link zu den rechtlichen Hinweisen & Impressum -->
+        <div class="legal-footer-link" style="text-align: center; margin-top: 25px;">
+            <a href="javascript:void(0)" onclick="openLegalModal('impressum')">⚖️ Gesetzliche Hinweise & Impressum</a>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- RECHTLICHES MODAL / POPUP                                         -->
+    <!-- ================================================================= -->
+    <div id="legal-modal" class="modal-overlay hidden">
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+            <div class="modal-header">
+                <h2 id="legal-modal-title">⚖️ Rechtliche Hinweise & Spielerschutz</h2>
+            </div>
+            <!-- Tab-Leiste -->
+            <div class="modal-tabs">
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('regeln')">Deutsches Glücksspielrecht</button>
+                <button type="button" class="modal-tab-btn active" onclick="switchModalTab('impressum')">Impressum (§ 5 DDG)</button>
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('datenschutz')">Datenschutz & Haftung</button>
+            </div>
+            <!-- Modal-Inhalte -->
+            <div class="modal-body">
+                <!-- TAB 1: Glücksspielregeln -->
+                <div id="tab-regeln" class="tab-content hidden">
+                    <div class="modal-alert-box">
+                        <strong>⚠️ Wichtiger Hinweis zu Glücksspiel & Jugendschutz:</strong><br>
+                        Glücksspiel kann süchtig machen. Die Teilnahme an Glücksspielen ist in Deutschland gemäß <strong>§ 4 Abs. 3 GlüStV 2021 erst ab 18 Jahren</strong> gesetzlich gestattet.
+                    </div>
+                    <div class="modal-info-box">
+                        <strong>🎓 Projekt-Hinweis (Hochschule / Webprogrammierung):</strong><br>
+                        Dieses Online-Spiel ist ein <em>nicht-kommerzielles Studienprojekt</em>. Sämtliche Guthaben, Einzahlungen und Gewinne sind <strong>rein fiktiv</strong> (Spielgeld). Es wird weder reales Geld entgegengenommen noch ausgezahlt.
+                    </div>
+                    <h3>Regulierungsrahmen nach dem Glücksspielstaatsvertrag (GlüStV 2021)</h3>
+                    <p>
+                        In der Bundesrepublik Deutschland unterliegt das Veranstalten und Vermitteln von Glücksspielen im Internet strengen gesetzlichen Auflagen durch die <strong>Gemeinsame Glücksspielbehörde der Länder (GGL)</strong>:
+                    </p>
+                    <ul>
+                        <li><strong>Verpflichtendes Altersverifikationssystem:</strong> Strenges Verbot der Teilnahme Minderjähriger.</li>
+                        <li><strong>Spielsucht-Prävention & OASIS:</strong> Anbindung legaler Angebote an das bundesweite Spielersperrsystem (OASIS) zum Selbst- oder Fremdschutz.</li>
+                        <li><strong>Einsatz- und Einzahlungslimits:</strong> Gesetzlich verankertes anbieterübergreifendes Einzahlungslimit (in der Regel max. 1.000 € monatlich für reale Angebote).</li>
+                        <li><strong>Trennung von Spielformen:</strong> Verbot von irreführender Werbung und unkontrollierten Parallelspielen.</li>
+                    </ul>
+                    <h3>Hilfe und Beratung bei Spielsucht</h3>
+                    <p>
+                        Sollten Sie oder Angehörige Anzeichen problematischen Spielverhaltens bemerken, bietet die <strong>Bundeszentrale für gesundheitliche Aufklärung (BZgA)</strong> kostenfreie und anonyme Beratung an:
+                    </p>
+                    <ul>
+                        <li>📞 <strong>Kostenfreie Hotline:</strong> 0800 1 37 27 00</li>
+                        <li>🌐 <strong>Webseite / Selbsttest:</strong> <a href="https://www.check-dein-spiel.de" target="_blank" style="color:var(--gold-text);">www.check-dein-spiel.de</a></li>
+                    </ul>
+                </div>
+                <!-- TAB 2: Impressum -->
+                <div id="tab-impressum" class="tab-content">
+                    <h3>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</h3>
+                    <p>
+                        Dieses Projekt wurde im Rahmen der Lehrveranstaltung <strong>Webprogrammierung</strong> erstellt.
+                    </p>
+                    <h3>Projektverantwortliche / Studierende:</h3>
+                    <p>
+                        Max Mustermann / Erika Musterfrau<br>
+                        Musterstraße 123<br>
+                        68159 Mannheim<br>
+                        Deutschland
+                    </p>
+                    <h3>Kontakt:</h3>
+                    <p>
+                        E-Mail: student@hochschule-beispiel.de<br>
+                        Telefon: +49 (0) 123 456789
+                    </p>
+                    <h3>Zugehörige Institution / Hochschule:</h3>
+                    <p>
+                        Hochschule / Universität Musterstadt<br>
+                        Fakultät Informatik / Studiengang Web Development<br>
+                        Betreuende Lehrkraft: Prof. Dr. Max Lehrprobe
+                    </p>
+                </div>
+                <!-- TAB 3: Datenschutz & Haftung -->
+                <div id="tab-datenschutz" class="tab-content hidden">
+                    <h3>Datenschutzerklärung</h3>
+                    <p>
+                        Diese Webanwendung verarbeitet keine personenbezogenen Daten auf externen Webservern.
+                    </p>
+                    <ul>
+                        <li><strong>Lokale Speicherung (Local Storage):</strong> Spielernamen und virtuelle Spielstände werden ausschließlich lokal in Ihrem Webbrowser (über die <code>localStorage</code>-API) abgelegt und nicht an Dritte übertragen.</li>
+                        <li><strong>Cookies:</strong> Es werden keine Tracking- oder Marketing-Cookies eingesetzt.</li>
+                    </ul>
+                    <h3>Haftungsausschluss (Disclaimer)</h3>
+                    <p>
+                        Die Inhalte dieser Web-App wurden für Lehrzwecke erstellt. Wir übernehmen keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der bereitgestellten Inhalte oder für technische Fehler.
+                    </p>
+                </div>
+            </div>
+            <!-- Footer / Schließen-Button -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeLegalModal()">Schließen</button>
+            </div>
+        </div>
     </div>
 
     <!-- Globale Logik -->
     <script src="js/app.js"></script>
-    
-    <!-- Seitenspezifische Logik (Aufladen) -->
+        
+    <!-- Seitenspezifische Logik -->
     <script>
-        // 1. Sicherheits-Check: Ist der Nutzer eingeloggt?
         if (!user || !user.username) {
             window.location.href = 'index.html';
         } else {
-            // Aktuelles Guthaben beim Laden der Seite anzeigen
             document.getElementById('balance-display').innerText = user.balance;
         }
 
-        // 2. Auflade-Event abfangen
-        document.getElementById('deposit-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Verhindert das Neuladen der Seite
-            
-            // Betrag aus dem Eingabefeld als Zahl (Integer) auslesen
-            const amount = parseInt(document.getElementById('deposit-amount').value, 10);
+        const paymentRadios = document.querySelectorAll('input[name="payment"]');
+        const ccFields = document.getElementById('creditcard-fields');
+        const ppFields = document.getElementById('paypal-fields');
 
-            // Prüfen, ob es eine gültige Zahl größer als 0 ist
+        function updatePaymentMethod() {
+            const isCC = document.querySelector('input[name="payment"]:checked').value === 'creditcard';
+            if (isCC) {
+                ccFields.classList.remove('hidden');
+                ppFields.classList.add('hidden');
+                ccFields.querySelectorAll('input').forEach(i => i.required = true);
+                ppFields.querySelectorAll('input').forEach(i => i.required = false);
+            } else {
+                ccFields.classList.add('hidden');
+                ppFields.classList.remove('hidden');
+                ccFields.querySelectorAll('input').forEach(i => i.required = false);
+                ppFields.querySelectorAll('input').forEach(i => i.required = true);
+            }
+        }
+
+        paymentRadios.forEach(radio => radio.addEventListener('change', updatePaymentMethod));
+        updatePaymentMethod();
+
+        document.getElementById('deposit-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const amount = parseInt(document.getElementById('deposit-amount').value, 10);
             if (!isNaN(amount) && amount > 0) {
-                
-                // Guthaben des Nutzers erhöhen
                 user.balance += amount;
-                
-                // Im LocalStorage speichern (Funktion kommt aus app.js)
-                saveUser(); 
-                
-                // Erfolgsmeldung für die Fallstudie anzeigen
+                saveUser();
                 alert(`Erfolgreich! Dir wurden ${amount} € gutgeschrieben.`);
-                
-                // Zurück zur Lobby
                 window.location.href = 'dashboard.html';
             }
         });

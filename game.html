@@ -7,70 +7,67 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="game-page">
-
     <div class="container game-container">
-        
-        <!-- Kopfbereich: Navigation und Live-Guthaben -->
+                
+        <!-- Kopfbereich: Button "Zurück zur Lobby" links und Live-Guthaben rechts -->
         <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <a href="dashboard.html" class="btn btn-secondary btn-lobby">🔙 Zur Lobby</a>
+            <div style="display: flex; align-items: center;">
+                <button type="button" onclick="leaveToLobby()" class="btn btn-secondary btn-lobby">Zurück zur Lobby</button>
+            </div>
             <div class="balance-widget" style="margin: 0; padding: 10px 20px;">
                 Guthaben: <strong class="balance-amount"><span class="balance-display">0</span> €</strong>
             </div>
         </header>
 
-        <!-- Das eigentliche Spielfeld (grüner Tisch) -->
+        <!-- Das eigentliche Spielfeld -->
         <main id="game-table">
-            
-            <!-- Linker Seitenbereich (Status oben vergrößert, nur "Neue Runde"-Button unten) -->
+                         
+            <!-- Linker Seitenbereich -->
             <div id="left-sidebar">
                 <div id="side-status-box" class="hidden">
                     <h4 class="side-title">Rundenergebnis</h4>
                     <div id="side-result-msg"></div>
                 </div>
-                
+                                 
                 <div id="side-end-controls" class="hidden">
                     <button onclick="restartRound()" class="btn btn-primary btn-full">Neue Runde</button>
                 </div>
             </div>
 
-            <!-- Rechter Seitenbereich (Vergrößerter Pot mit sortierten 3D-Chip-Stapeln) -->
+            <!-- Rechter Seitenbereich (Pots & Chips) -->
             <div id="right-sidebar">
-                <div id="pots-container">
-                    <!-- Dynamisch per JS generiert -->
-                </div>
+                <div id="pots-container"></div>
             </div>
-            
-            <!-- 1. Overlay für den Wetteinsatz (nur vor Spielstart) -->
+                         
+            <!-- 1. Overlay für den Wetteinsatz -->
             <div id="bet-overlay">
                 <h2 style="color: white; margin-bottom: 10px; font-size: 32px;">Ihren Einsatz bitte</h2>
-                
-                <!-- Schnellauswahl-Buttons im Jeton-Design -->
+                                 
+                <!-- Schnellauswahl-Buttons im Jeton-Design + Clear Button -->
                 <div class="quick-bets">
                     <button type="button" class="btn-chip chip-5" data-amount="5">+5 €</button>
                     <button type="button" class="btn-chip chip-10" data-amount="10">+10 €</button>
                     <button type="button" class="btn-chip chip-20" data-amount="20">+20 €</button>
                     <button type="button" class="btn-chip chip-50" data-amount="50">+50 €</button>
+                    <button type="button" id="btn-clear-bet" class="chip-clear" onclick="clearBet()" title="Auf Mindesteinsatz (10 €) zurücksetzen">Clear</button>
                 </div>
 
                 <div class="form-group" style="width: 250px;">
                     <input type="number" id="bet-input" placeholder="Einsatz in €" min="1" value="10" required style="text-align: center; font-size: 24px; font-weight: bold;">
                 </div>
+
                 <button onclick="placeBet()" class="btn btn-secondary btn-large" style="width: 250px;">Karten geben (Deal)</button>
             </div>
 
             <!-- 2. Dealer-Bereich -->
             <div id="dealer-area" class="hidden" style="text-align: center; color: white;">
                 <h3>Dealer <span id="dealer-score"></span></h3>
-                <div id="dealer-cards" class="card-container">
-                    <!-- Karten werden hier von JS animiert eingefügt -->
-                </div>
+                <div id="dealer-cards" class="card-container"></div>
             </div>
 
             <!-- 3. Spieler-Bereich -->
             <div id="player-area" class="hidden" style="text-align: center; color: white; margin-top: 20px;">
-                <div id="player-hands-container">
-                    <!-- Spielerhände werden hier von JS generiert -->
-                </div>
+                <div id="player-hands-container"></div>
             </div>
 
             <!-- 4. Spiel-Steuerung (Hit, Stand, Split) -->
@@ -81,20 +78,137 @@
             </div>
 
         </main>
+
+        <!-- 1-Klick-Link zu den rechtlichen Hinweisen & Impressum -->
+        <div class="legal-footer-link" style="text-align: center; margin-top: 15px;">
+            <a href="javascript:void(0)" onclick="openLegalModal('impressum')">⚖️ Gesetzliche Hinweise & Impressum</a>
+        </div>
     </div>
 
-    <!-- 1. Globale Logik laden -->
+    <!-- ================================================================= -->
+    <!-- RECHTLICHES MODAL / POPUP                                         -->
+    <!-- ================================================================= -->
+    <div id="legal-modal" class="modal-overlay hidden">
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+            <div class="modal-header">
+                <h2 id="legal-modal-title">⚖️ Rechtliche Hinweise & Spielerschutz</h2>
+            </div>
+            <!-- Tab-Leiste -->
+            <div class="modal-tabs">
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('regeln')">Deutsches Glücksspielrecht</button>
+                <button type="button" class="modal-tab-btn active" onclick="switchModalTab('impressum')">Impressum (§ 5 DDG)</button>
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('datenschutz')">Datenschutz & Haftung</button>
+            </div>
+            <!-- Modal-Inhalte -->
+            <div class="modal-body">
+                <!-- TAB 1: Glücksspielregeln -->
+                <div id="tab-regeln" class="tab-content hidden">
+                    <div class="modal-alert-box">
+                        <strong>⚠️ Wichtiger Hinweis zu Glücksspiel & Jugendschutz:</strong><br>
+                        Glücksspiel kann süchtig machen. Die Teilnahme an Glücksspielen ist in Deutschland gemäß <strong>§ 4 Abs. 3 GlüStV 2021 erst ab 18 Jahren</strong> gesetzlich gestattet.
+                    </div>
+                    <div class="modal-info-box">
+                        <strong>🎓 Projekt-Hinweis (Hochschule / Webprogrammierung):</strong><br>
+                        Dieses Online-Spiel ist ein <em>nicht-kommerzielles Studienprojekt</em>. Sämtliche Guthaben, Einzahlungen und Gewinne sind <strong>rein fiktiv</strong> (Spielgeld). Es wird weder reales Geld entgegengenommen noch ausgezahlt.
+                    </div>
+                    <h3>Regulierungsrahmen nach dem Glücksspielstaatsvertrag (GlüStV 2021)</h3>
+                    <p>
+                        In der Bundesrepublik Deutschland unterliegt das Veranstalten und Vermitteln von Glücksspielen im Internet strengen gesetzlichen Auflagen durch die <strong>Gemeinsame Glücksspielbehörde der Länder (GGL)</strong>:
+                    </p>
+                    <ul>
+                        <li><strong>Verpflichtendes Altersverifikationssystem:</strong> Strenges Verbot der Teilnahme Minderjähriger.</li>
+                        <li><strong>Spielsucht-Prävention & OASIS:</strong> Anbindung legaler Angebote an das bundesweite Spielersperrsystem (OASIS) zum Selbst- oder Fremdschutz.</li>
+                        <li><strong>Einsatz- und Einzahlungslimits:</strong> Gesetzlich verankertes anbieterübergreifendes Einzahlungslimit (in der Regel max. 1.000 € monatlich für reale Angebote).</li>
+                        <li><strong>Trennung von Spielformen:</strong> Verbot von irreführender Werbung und unkontrollierten Parallelspielen.</li>
+                    </ul>
+                    <h3>Hilfe und Beratung bei Spielsucht</h3>
+                    <p>
+                        Sollten Sie oder Angehörige Anzeichen problematischen Spielverhaltens bemerken, bietet die <strong>Bundeszentrale für gesundheitliche Aufklärung (BZgA)</strong> kostenfreie und anonyme Beratung an:
+                    </p>
+                    <ul>
+                        <li>📞 <strong>Kostenfreie Hotline:</strong> 0800 1 37 27 00</li>
+                        <li>🌐 <strong>Webseite / Selbsttest:</strong> <a href="https://www.check-dein-spiel.de" target="_blank" style="color:var(--gold-text);">www.check-dein-spiel.de</a></li>
+                    </ul>
+                </div>
+                <!-- TAB 2: Impressum -->
+                <div id="tab-impressum" class="tab-content">
+                    <h3>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</h3>
+                    <p>
+                        Dieses Projekt wurde im Rahmen der Lehrveranstaltung <strong>Webprogrammierung</strong> erstellt.
+                    </p>
+                    <h3>Projektverantwortliche / Studierende:</h3>
+                    <p>
+                        Max Mustermann / Erika Musterfrau<br>
+                        Musterstraße 123<br>
+                        68159 Mannheim<br>
+                        Deutschland
+                    </p>
+                    <h3>Kontakt:</h3>
+                    <p>
+                        E-Mail: student@hochschule-beispiel.de<br>
+                        Telefon: +49 (0) 123 456789
+                    </p>
+                    <h3>Zugehörige Institution / Hochschule:</h3>
+                    <p>
+                        Hochschule / Universität Musterstadt<br>
+                        Fakultät Informatik / Studiengang Web Development<br>
+                        Betreuende Lehrkraft: Prof. Dr. Max Lehrprobe
+                    </p>
+                </div>
+                <!-- TAB 3: Datenschutz & Haftung -->
+                <div id="tab-datenschutz" class="tab-content hidden">
+                    <h3>Datenschutzerklärung</h3>
+                    <p>
+                        Diese Webanwendung verarbeitet keine personenbezogenen Daten auf externen Webservern.
+                    </p>
+                    <ul>
+                        <li><strong>Lokale Speicherung (Local Storage):</strong> Spielernamen und virtuelle Spielstände werden ausschließlich lokal in Ihrem Webbrowser (über die <code>localStorage</code>-API) abgelegt und nicht an Dritte übertragen.</li>
+                        <li><strong>Cookies:</strong> Es werden keine Tracking- oder Marketing-Cookies eingesetzt.</li>
+                    </ul>
+                    <h3>Haftungsausschluss (Disclaimer)</h3>
+                    <p>
+                        Die Inhalte dieser Web-App wurden für Lehrzwecke erstellt. Wir übernehmen keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der bereitgestellten Inhalte oder für technische Fehler.
+                    </p>
+                </div>
+            </div>
+            <!-- Footer / Schließen-Button -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeLegalModal()">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Globale Logik -->
     <script src="js/app.js"></script>
-    
-    <!-- Sicherheits-Check -->
     <script>
         if (!user || !user.username) {
             window.location.href = 'index.html';
         }
+
+        // Setzt den Einsatz auf den Mindestwert (10 €) zurück
+        function clearBet() {
+            document.getElementById('bet-input').value = 10;
+        }
+
+        // Zurück zur Lobby mit Warnhinweis bei aktivem Spiel
+        function leaveToLobby() {
+            const betOverlay = document.getElementById('bet-overlay');
+            const sideEndControls = document.getElementById('side-end-controls');
+
+            // Das Spiel läuft aktiv: Einsatz wurde gesetzt (Overlay ausgeblendet) und Runde ist noch nicht beendet
+            const isRoundActive = betOverlay && betOverlay.classList.contains('hidden') &&
+                                  sideEndControls && sideEndControls.classList.contains('hidden');
+
+            if (isRoundActive) {
+                const confirmed = confirm("Achtung: Hiermit wird das laufende Spiel abgebrochen und der Einsatz wird nicht erstattet! Möchtest du wirklich zurück zur Lobby?");
+                if (!confirmed) {
+                    return; // Im Spiel bleiben
+                }
+            }
+            window.location.href = 'dashboard.html';
+        }
     </script>
-
-    <!-- 2. Spiellogik laden -->
+    <!-- Spiellogik -->
     <script src="js/game.js"></script>
-
 </body>
 </html>

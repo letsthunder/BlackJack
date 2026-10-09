@@ -7,52 +7,146 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="dashboard-page">
-
     <div class="container dashboard-container">
-        <!-- Kopfbereich mit Begrüßung und Kontostand -->
-        <header class="dashboard-header">
-            <h1 id="welcome-message">Willkommen!</h1>
-            <div class="balance-widget">
-                <span>Dein Guthaben:</span>
-                <strong class="balance-amount"><span id="balance-display">0</span> €</strong>
+        <div class="dashboard-layout">
+            <!-- Linke Spalte: Großes Logo & darunter der Ausloggen-Button -->
+            <div class="dashboard-col-left">
+                <img src="Blackjack_Logo.jpg" alt="Blackjack 21 Logo" class="dashboard-logo-large">
+                <button id="logout-btn" class="btn btn-danger btn-full">Ausloggen</button>
             </div>
-        </header>
 
-        <!-- Hauptmenü mit den wichtigsten Aktionen -->
-        <main class="dashboard-menu">
-            <h2>Was möchtest du tun?</h2>
-            <div class="menu-actions">
-                <a href="game.html" class="btn btn-primary btn-large">♠♥ Blackjack spielen ♣♦</a>
-                <a href="deposit.html" class="btn btn-secondary btn-large">Guthaben aufladen</a>
+            <!-- Rechte Spalte: Begrüßung, Guthaben & Aktions-Buttons -->
+            <div class="dashboard-col-right">
+                <header class="dashboard-header">
+                    <h1 id="welcome-message">Willkommen!</h1>
+                    <div class="balance-widget">
+                        <span>Dein Guthaben:</span>
+                        <strong class="balance-amount"><span id="balance-display">0</span> €</strong>
+                    </div>
+                </header>
+
+                <main class="dashboard-menu">
+                    <div class="menu-actions">
+                        <a href="game.html" class="btn btn-primary btn-large">♠ Blackjack spielen ♠</a>
+                        <a href="deposit.html" class="btn btn-secondary btn-large">Guthaben aufladen</a>
+                    </div>
+                </main>
             </div>
-        </main>
+        </div>
 
-        <!-- Fußbereich für den Logout -->
-        <footer class="dashboard-footer">
-            <button id="logout-btn" class="btn btn-danger">Ausloggen</button>
-        </footer>
+        <!-- 1-Klick-Link zu den rechtlichen Hinweisen & Impressum -->
+        <div class="legal-footer-link" style="text-align: center; margin-top: 25px;">
+            <a href="javascript:void(0)" onclick="openLegalModal('impressum')">⚖️ Gesetzliche Hinweise & Impressum</a>
+        </div>
     </div>
 
-    <!-- Globale Logik (Kontostand, User-Daten) -->
+    <!-- ================================================================= -->
+    <!-- RECHTLICHES MODAL / POPUP                                         -->
+    <!-- ================================================================= -->
+    <div id="legal-modal" class="modal-overlay hidden">
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+            <div class="modal-header">
+                <h2 id="legal-modal-title">⚖️ Rechtliche Hinweise & Spielerschutz</h2>
+            </div>
+            <!-- Tab-Leiste -->
+            <div class="modal-tabs">
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('regeln')">Deutsches Glücksspielrecht</button>
+                <button type="button" class="modal-tab-btn active" onclick="switchModalTab('impressum')">Impressum (§ 5 DDG)</button>
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('datenschutz')">Datenschutz & Haftung</button>
+            </div>
+            <!-- Modal-Inhalte -->
+            <div class="modal-body">
+                <!-- TAB 1: Glücksspielregeln -->
+                <div id="tab-regeln" class="tab-content hidden">
+                    <div class="modal-alert-box">
+                        <strong>⚠️ Wichtiger Hinweis zu Glücksspiel & Jugendschutz:</strong><br>
+                        Glücksspiel kann süchtig machen. Die Teilnahme an Glücksspielen ist in Deutschland gemäß <strong>§ 4 Abs. 3 GlüStV 2021 erst ab 18 Jahren</strong> gesetzlich gestattet.
+                    </div>
+                    <div class="modal-info-box">
+                        <strong>🎓 Projekt-Hinweis (Hochschule / Webprogrammierung):</strong><br>
+                        Dieses Online-Spiel ist ein <em>nicht-kommerzielles Studienprojekt</em>. Sämtliche Guthaben, Einzahlungen und Gewinne sind <strong>rein fiktiv</strong> (Spielgeld). Es wird weder reales Geld entgegengenommen noch ausgezahlt.
+                    </div>
+                    <h3>Regulierungsrahmen nach dem Glücksspielstaatsvertrag (GlüStV 2021)</h3>
+                    <p>
+                        In der Bundesrepublik Deutschland unterliegt das Veranstalten und Vermitteln von Glücksspielen im Internet strengen gesetzlichen Auflagen durch die <strong>Gemeinsame Glücksspielbehörde der Länder (GGL)</strong>:
+                    </p>
+                    <ul>
+                        <li><strong>Verpflichtendes Altersverifikationssystem:</strong> Strenges Verbot der Teilnahme Minderjähriger.</li>
+                        <li><strong>Spielsucht-Prävention & OASIS:</strong> Anbindung legaler Angebote an das bundesweite Spielersperrsystem (OASIS) zum Selbst- oder Fremdschutz.</li>
+                        <li><strong>Einsatz- und Einzahlungslimits:</strong> Gesetzlich verankertes anbieterübergreifendes Einzahlungslimit (in der Regel max. 1.000 € monatlich für reale Angebote).</li>
+                        <li><strong>Trennung von Spielformen:</strong> Verbot von irreführender Werbung und unkontrollierten Parallelspielen.</li>
+                    </ul>
+                    <h3>Hilfe und Beratung bei Spielsucht</h3>
+                    <p>
+                        Sollten Sie oder Angehörige Anzeichen problematischen Spielverhaltens bemerken, bietet die <strong>Bundeszentrale für gesundheitliche Aufklärung (BZgA)</strong> kostenfreie und anonyme Beratung an:
+                    </p>
+                    <ul>
+                        <li>📞 <strong>Kostenfreie Hotline:</strong> 0800 1 37 27 00</li>
+                        <li>🌐 <strong>Webseite / Selbsttest:</strong> <a href="https://www.check-dein-spiel.de" target="_blank" style="color:var(--gold-text);">www.check-dein-spiel.de</a></li>
+                    </ul>
+                </div>
+                <!-- TAB 2: Impressum -->
+                <div id="tab-impressum" class="tab-content">
+                    <h3>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</h3>
+                    <p>
+                        Dieses Projekt wurde im Rahmen der Lehrveranstaltung <strong>Webprogrammierung</strong> erstellt.
+                    </p>
+                    <h3>Projektverantwortliche / Studierende:</h3>
+                    <p>
+                        Max Mustermann / Erika Musterfrau<br>
+                        Musterstraße 123<br>
+                        68159 Mannheim<br>
+                        Deutschland
+                    </p>
+                    <h3>Kontakt:</h3>
+                    <p>
+                        E-Mail: student@hochschule-beispiel.de<br>
+                        Telefon: +49 (0) 123 456789
+                    </p>
+                    <h3>Zugehörige Institution / Hochschule:</h3>
+                    <p>
+                        Hochschule / Universität Musterstadt<br>
+                        Fakultät Informatik / Studiengang Web Development<br>
+                        Betreuende Lehrkraft: Prof. Dr. Max Lehrprobe
+                    </p>
+                </div>
+                <!-- TAB 3: Datenschutz & Haftung -->
+                <div id="tab-datenschutz" class="tab-content hidden">
+                    <h3>Datenschutzerklärung</h3>
+                    <p>
+                        Diese Webanwendung verarbeitet keine personenbezogenen Daten auf externen Webservern.
+                    </p>
+                    <ul>
+                        <li><strong>Lokale Speicherung (Local Storage):</strong> Spielernamen und virtuelle Spielstände werden ausschließlich lokal in Ihrem Webbrowser (über die <code>localStorage</code>-API) abgelegt und nicht an Dritte übertragen.</li>
+                        <li><strong>Cookies:</strong> Es werden keine Tracking- oder Marketing-Cookies eingesetzt.</li>
+                    </ul>
+                    <h3>Haftungsausschluss (Disclaimer)</h3>
+                    <p>
+                        Die Inhalte dieser Web-App wurden für Lehrzwecke erstellt. Wir übernehmen keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der bereitgestellten Inhalte oder für technische Fehler.
+                    </p>
+                </div>
+            </div>
+            <!-- Footer / Schließen-Button -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeLegalModal()">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Globale Logik -->
     <script src="js/app.js"></script>
-    
+         
     <!-- Seitenspezifische Logik -->
     <script>
-        // 1. Sicherheits-Check: Prüfen, ob der Nutzer überhaupt eingeloggt ist.
-        // Das Objekt 'user' wird aus der app.js zur Verfügung gestellt.
         if (!user || !user.username) {
-            window.location.href = 'index.html'; // Zurück zum Login, falls nicht angemeldet
+            window.location.href = 'index.html';
         } else {
-            // 2. Willkommensnachricht personalisieren
             document.getElementById('welcome-message').innerText = 'Willkommen, ' + user.username + '!';
-            
-            // 3. Kontostand anzeigen (die ID 'balance-display' wird auch in app.js genutzt)
             document.getElementById('balance-display').innerText = user.balance;
         }
 
-        // 4. Logout-Funktion anbinden
         document.getElementById('logout-btn').addEventListener('click', function() {
-            logoutUser(); // Diese Funktion werden wir in der app.js definieren
+            logoutUser();
         });
     </script>
 </body>

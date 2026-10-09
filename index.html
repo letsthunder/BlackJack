@@ -9,6 +9,8 @@
 <body class="login-page">
 
     <div class="container login-container">
+        <!-- ZENTRALES LOGO (MITTIG) -->
+        <img src="Blackjack_Logo.jpg" alt="Blackjack 21 Logo" class="logo-center">
         <h1>Blackjack Casino</h1>
         <p class="subtitle">Bitte logge dich in dein Konto ein</p>
 
@@ -25,35 +27,190 @@
 
             <button type="submit" class="btn btn-primary btn-full">Einloggen</button>
         </form>
+
+        <!-- Link, um das Popup jederzeit manuell aufzurufen -->
+        <div class="legal-footer-link">
+            <a href="javascript:void(0)" onclick="openLegalModal('regeln')">⚖️ Gesetzliche Hinweise & Impressum</a>
+        </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- RECHTLICHES MODAL / POPUP                                         -->
+    <!-- ================================================================= -->
+    <div id="legal-modal" class="modal-overlay hidden">
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="legal-modal-title">
+            
+            <div class="modal-header">
+                <h2 id="legal-modal-title">⚖️ Rechtliche Hinweise & Spielerschutz</h2>
+            </div>
+
+            <!-- Tab-Leiste -->
+            <div class="modal-tabs">
+                <button type="button" class="modal-tab-btn active" onclick="switchModalTab('regeln')">Deutsches Glücksspielrecht</button>
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('impressum')">Impressum (§ 5 DDG)</button>
+                <button type="button" class="modal-tab-btn" onclick="switchModalTab('datenschutz')">Datenschutz & Haftung</button>
+            </div>
+
+            <!-- Modal-Inhalte -->
+            <div class="modal-body">
+                
+                <!-- TAB 1: Glücksspielregeln -->
+                <div id="tab-regeln" class="tab-content">
+                    <div class="modal-alert-box">
+                        <strong>⚠️ Wichtiger Hinweis zu Glücksspiel & Jugendschutz:</strong><br>
+                        Glücksspiel kann süchtig machen. Die Teilnahme an Glücksspielen ist in Deutschland gemäß <strong>§ 4 Abs. 3 GlüStV 2021 erst ab 18 Jahren</strong> gesetzlich gestattet.
+                    </div>
+
+                    <div class="modal-info-box">
+                        <strong>🎓 Projekt-Hinweis (Hochschule / Webprogrammierung):</strong><br>
+                        Dieses Online-Spiel ist ein <em>nicht-kommerzielles Studienprojekt</em>. Sämtliche Guthaben, Einzahlungen und Gewinne sind <strong>rein fiktiv</strong> (Spielgeld). Es wird weder reales Geld entgegengenommen noch ausgezahlt.
+                    </div>
+
+                    <h3>Regulierungsrahmen nach dem Glücksspielstaatsvertrag (GlüStV 2021)</h3>
+                    <p>
+                        In der Bundesrepublik Deutschland unterliegt das Veranstalten und Vermitteln von Glücksspielen im Internet strengen gesetzlichen Auflagen durch die <strong>Gemeinsame Glücksspielbehörde der Länder (GGL)</strong>:
+                    </p>
+                    <ul>
+                        <li><strong>Verpflichtendes Altersverifikationssystem:</strong> Strenges Verbot der Teilnahme Minderjähriger.</li>
+                        <li><strong>Spielsucht-Prävention & OASIS:</strong> Anbindung legaler Angebote an das bundesweite Spielersperrsystem (OASIS) zum Selbst- oder Fremdschutz.</li>
+                        <li><strong>Einsatz- und Einzahlungslimits:</strong> Gesetzlich verankertes anbieterübergreifendes Einzahlungslimit (in der Regel max. 1.000 € monatlich für reale Angebote).</li>
+                        <li><strong>Trennung von Spielformen:</strong> Verbot von irreführender Werbung und unkontrollierten Parallelspielen.</li>
+                    </ul>
+
+                    <h3>Hilfe und Beratung bei Spielsucht</h3>
+                    <p>
+                        Sollten Sie oder Angehörige Anzeichen problematischen Spielverhaltens bemerken, bietet die <strong>Bundeszentrale für gesundheitliche Aufklärung (BZgA)</strong> kostenfreie und anonyme Beratung an:
+                    </p>
+                    <ul>
+                        <li>📞 <strong>Kostenfreie Hotline:</strong> 0800 1 37 27 00</li>
+                        <li>🌐 <strong>Webseite / Selbsttest:</strong> <a href="https://www.check-dein-spiel.de" target="_blank" style="color:var(--gold-text);">www.check-dein-spiel.de</a></li>
+                    </ul>
+                </div>
+
+                <!-- TAB 2: Impressum -->
+                <div id="tab-impressum" class="tab-content hidden">
+                    <h3>Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)</h3>
+                    <p>
+                        Dieses Projekt wurde im Rahmen der Lehrveranstaltung <strong>Webprogrammierung</strong> erstellt.
+                    </p>
+                    
+                    <h3>Projektverantwortliche / Studierende:</h3>
+                    <p>
+                        <!-- HIER ANPASSEN -->
+                        Max Mustermann / Erika Musterfrau<br>
+                        Musterstraße 123<br>
+                        68159 Mannheim<br>
+                        Deutschland
+                    </p>
+
+                    <h3>Kontakt:</h3>
+                    <p>
+                        <!-- HIER ANPASSEN -->
+                        E-Mail: student@hochschule-beispiel.de<br>
+                        Telefon: +49 (0) 123 456789
+                    </p>
+
+                    <h3>Zugehörige Institution / Hochschule:</h3>
+                    <p>
+                        <!-- HIER ANPASSEN -->
+                        Hochschule / Universität Musterstadt<br>
+                        Fakultät für Informatik / Studiengang Web Development<br>
+                        Betreuende Lehrkraft: Prof. Dr. Max Lehrprobe
+                    </p>
+                </div>
+
+                <!-- TAB 3: Datenschutz & Haftung -->
+                <div id="tab-datenschutz" class="tab-content hidden">
+                    <h3>Datenschutzerklärung</h3>
+                    <p>
+                        Diese Webanwendung verarbeitet keine personenbezogenen Daten auf externen Webservern.
+                    </p>
+                    <ul>
+                        <li><strong>Lokale Speicherung (Local Storage):</strong> Spielernamen und virtuelle Spielstände werden ausschließlich lokal in Ihrem Webbrowser (über die <code>localStorage</code>-API) abgelegt und nicht an Dritte übertragen.</li>
+                        <li><strong>Cookies:</strong> Es werden keine Tracking- oder Marketing-Cookies eingesetzt.</li>
+                    </ul>
+
+                    <h3>Haftungsausschluss (Disclaimer)</h3>
+                    <p>
+                        Die Inhalte dieser Web-App wurden für Lehrzwecke erstellt. Wir übernehmen keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der bereitgestellten Inhalte oder für technische Fehler.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Footer / Bestätigungsbutton -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeLegalModal()">Ich bestätige & habe verstanden</button>
+            </div>
+
+        </div>
     </div>
 
     <!-- Das globale Skript für die Nutzerverwaltung -->
     <script src="js/app.js"></script>
     
-    <!-- Seitenspezifische Logik (Login) -->
+    <!-- Seitenspezifische Logik (Login + Popup-Steuerung) -->
     <script>
         // Sicherheits-Check: Wenn der Nutzer bereits im localStorage existiert,
-        // wird er sofort zum Dashboard weitergeleitet, ohne sich neu einzuloggen.
+        // wird er sofort zum Dashboard weitergeleitet.
         if (user && user.username) {
             window.location.href = 'dashboard.html';
         }
 
-        // Login-Event abfangen
+        // =================================================================
+        // LOGIK FÜR DAS POPUP-MODAL
+        // =================================================================
+        function openLegalModal(tabName = 'regeln') {
+            document.getElementById('legal-modal').classList.remove('hidden');
+            switchModalTab(tabName);
+        }
+
+        function closeLegalModal() {
+            document.getElementById('legal-modal').classList.add('hidden');
+            // Merken, dass das Popup in dieser Sitzung bereits gesehen wurde
+            sessionStorage.setItem('bj_legal_confirmed', 'true');
+        }
+
+        function switchModalTab(tabName) {
+            // Alle Tab-Inhalte verstecken
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.modal-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Gewählten Tab anzeigen
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            if (activeTab) activeTab.classList.remove('hidden');
+
+            // Passenden Button markieren
+            const buttons = document.querySelectorAll('.modal-tab-btn');
+            if (tabName === 'regeln' && buttons[0]) buttons[0].classList.add('active');
+            if (tabName === 'impressum' && buttons[1]) buttons[1].classList.add('active');
+            if (tabName === 'datenschutz' && buttons[2]) buttons[2].classList.add('active');
+        }
+
+        // Öffnet das Popup automatisch beim ersten Laden der Startseite
+        document.addEventListener('DOMContentLoaded', function() {
+            const alreadySeen = sessionStorage.getItem('bj_legal_confirmed');
+            if (!alreadySeen) {
+                openLegalModal('regeln');
+            }
+        });
+
+        // =================================================================
+        // LOGIN-LOGIK
+        // =================================================================
         document.getElementById('login-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Verhindert das Neuladen der Seite
+            event.preventDefault();
             
             const usernameInput = document.getElementById('username').value.trim();
 
             if (usernameInput !== "") {
-                // Nutzerobjekt erstellen (jeder neue Login startet mit 0€ Guthaben, 
-                // das Aufladen soll ja später gezeigt werden)
                 user = { 
                     username: usernameInput, 
                     balance: 0 
                 };
                 
-                saveUser(); // Diese Funktion werden wir in der app.js definieren
-                window.location.href = 'dashboard.html'; // Weiterleitung zum Menü
+                saveUser();
+                window.location.href = 'dashboard.html';
             }
         });
     </script>

@@ -46,9 +46,15 @@ body {
     width: 100%;
 }
 
-.login-container, .dashboard-container, .deposit-container {
+.login-container, .deposit-container {
     max-width: 450px;
     text-align: center;
+}
+
+/* Breite für das Dashboard von 450px auf 900px verdoppelt */
+.dashboard-container {
+    max-width: 900px;
+    text-align: left;
 }
 
 .game-container {
@@ -126,21 +132,19 @@ input:focus {
 }
 
 .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.6); }
+
 .btn-full { width: 100%; }
 .btn-large { padding: 15px 30px; font-size: 18px; width: 100%; margin-bottom: 15px; }
 
 .btn-primary { 
     background: linear-gradient(180deg, #3b638c 0%, #1e3650 100%); 
 }
-
 .btn-secondary { 
     background: linear-gradient(180deg, #3d7a4e 0%, #1b4226 100%); 
 }
-
 .btn-danger { 
     background: linear-gradient(180deg, #8e2a2a 0%, #4a1212 100%); 
 }
-
 .btn-lobby {
     background: linear-gradient(180deg, #4a3b2c 0%, #241a12 100%);
     border: 2px solid var(--gold-border);
@@ -166,6 +170,71 @@ input:focus {
     font-size: 24px; 
     display: block; 
     margin-top: 5px; 
+}
+
+/* 2-Spalten-Layout für das verdoppelte Dashboard */
+.dashboard-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+/* Linke Spalte: Großes Logo & Logout */
+.dashboard-col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.dashboard-logo-large {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    border-radius: 14px;
+    border: 2px solid var(--gold-border);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.dashboard-logo-large:hover {
+    transform: scale(1.02);
+    filter: brightness(1.08);
+}
+
+/* Rechte Spalte: Begrüßung, Guthaben & Aktionen */
+.dashboard-col-right {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard-col-right .balance-widget {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.dashboard-col-right h1 {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.dashboard-col-right .menu-actions .btn-large:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive Anpassung bei schmalen Bildschirmen */
+@media (max-width: 768px) {
+    .dashboard-layout {
+        flex-direction: column;
+    }
+    .dashboard-col-left, .dashboard-col-right {
+        width: 100%;
+        text-align: center;
+    }
 }
 
 /* ==========================================================================
@@ -289,7 +358,7 @@ input:focus {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
-    margin-bottom: 25px; /* Abstand für überlappenden Chip-Stapel */
+    margin-bottom: 25px;
 }
 
 /* 3D Chip Styling */
@@ -304,7 +373,7 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: -40px; /* Stapelt Chips derselben Wertigkeit vertikal */
+    margin-bottom: -40px;
     box-shadow: 
         0 5px 8px rgba(0, 0, 0, 0.7),
         inset 0 0 0 3px rgba(0, 0, 0, 0.35);
@@ -453,3 +522,273 @@ input:focus {
 .chip-10 { background: radial-gradient(circle, #2980b9 0%, #1a5276 100%); box-shadow: inset 0 0 0 4px #114b5f, 0 6px 12px rgba(0, 0, 0, 0.6); }
 .chip-20 { background: radial-gradient(circle, #27ae60 0%, #196f3d 100%); box-shadow: inset 0 0 0 4px #114e2e, 0 6px 12px rgba(0, 0, 0, 0.6); }
 .chip-50 { background: radial-gradient(circle, #f39c12 0%, #b9770e 100%); box-shadow: inset 0 0 0 4px #7e5109, 0 6px 12px rgba(0, 0, 0, 0.6); }
+
+.chip-clear {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 3px dashed rgba(255, 255, 255, 0.8);
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    font-size: 13px;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+    transition: transform 0.2s ease, filter 0.2s ease;
+    background: radial-gradient(circle, #8e2a2a 0%, #4a1212 100%);
+    box-shadow: inset 0 0 0 4px #2c0b0b, 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.chip-clear:hover {
+    transform: translateY(-4px) scale(1.08);
+    filter: brightness(1.2);
+}
+
+.chip-clear:active {
+    transform: translateY(1px) scale(0.95);
+}
+
+/* ==========================================================================
+   8. RECHTLICHE HINWEISE & MODAL-POPUP (GLÜCKSSPIELREGELN & IMPRESSUM)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.modal-container {
+    background: linear-gradient(180deg, #2b303a 0%, #1e2229 100%);
+    border: 2px solid var(--gold-border);
+    border-radius: 14px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(226, 194, 105, 0.2);
+    animation: modalSlideDown 0.35s ease-out;
+}
+
+@keyframes modalSlideDown {
+    from {
+        transform: translateY(-30px) scale(0.96);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 20px 25px 15px 25px;
+    border-bottom: 1px solid rgba(184, 148, 77, 0.3);
+    text-align: left;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--gold-text);
+}
+
+/* Tabs-Navigation */
+.modal-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 25px 0 25px;
+    background-color: rgba(10, 15, 20, 0.4);
+    border-bottom: 1px solid rgba(184, 148, 77, 0.3);
+    overflow-x: auto;
+}
+
+.modal-tab-btn {
+    background: none;
+    border: none;
+    color: #a4b0be;
+    padding: 10px 16px;
+    font-size: 15px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    font-weight: 600;
+}
+
+.modal-tab-btn:hover {
+    color: #f5f6fa;
+}
+
+.modal-tab-btn.active {
+    color: var(--gold-text);
+    border-bottom: 3px solid var(--gold-text);
+}
+
+/* Modal Content & Scroller */
+.modal-body {
+    padding: 25px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #dcdde1;
+    text-align: left;
+}
+
+.modal-body h3 {
+    font-size: 18px;
+    margin: 15px 0 8px 0;
+    color: var(--gold-text);
+}
+
+.modal-body h3:first-child {
+    margin-top: 0;
+}
+
+.modal-body p {
+    margin-bottom: 12px;
+}
+
+.modal-body ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.modal-body li {
+    margin-bottom: 6px;
+}
+
+.modal-alert-box {
+    background-color: rgba(142, 42, 42, 0.3);
+    border-left: 4px solid var(--danger-color);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 18px;
+    color: #f5f6fa;
+}
+
+.modal-info-box {
+    background-color: rgba(43, 84, 126, 0.3);
+    border-left: 4px solid var(--primary-color);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 18px;
+}
+
+/* Footer / Bestätigung */
+.modal-footer {
+    padding: 15px 25px;
+    border-top: 1px solid rgba(184, 148, 77, 0.3);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background-color: rgba(10, 15, 20, 0.3);
+    border-radius: 0 0 14px 14px;
+}
+
+/* Fußzeilen-Link auf der Startseite */
+.legal-footer-link {
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.legal-footer-link a {
+    color: var(--gold-text);
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 0.85;
+}
+
+.legal-footer-link a:hover {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   9. LOGO-STYLING (HEADER & UNTERSEITEN)
+   ========================================================================== */
+/* Kompaktes Logo oben links auf den Unterseiten */
+.logo-corner {
+    height: 52px;
+    width: auto;
+    border-radius: 8px;
+    border: 1px solid rgba(184, 148, 77, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    vertical-align: middle;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.logo-corner:hover {
+    transform: scale(1.05);
+    filter: brightness(1.15);
+}
+
+/* Hilfs-Container für die Ausrichtung oben links */
+.top-bar-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   10. STARTSEITE: LOGO VERGRÖSSERN & TEXTE SKALIEREN
+   ========================================================================== */
+/* 1. Großes, zentriertes Logo auf der Startseite */
+.logo-center {
+    display: block;
+    margin: 0 auto 15px auto;
+    max-width: 300px;
+    width: 90%;
+    height: auto;
+    border-radius: 16px;
+    border: 1px solid rgba(184, 148, 77, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+    transition: transform 0.3s ease;
+}
+
+.logo-center:hover {
+    transform: scale(1.02);
+}
+
+/* 2. Überschrift auf der Startseite dezent verkleinern */
+.login-container h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+/* 3. Untertitel kompakter gestalten */
+.login-container .subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #c8d6e5;
+}
+
+/* 4. Formular-Texte (Labels & Inputs) harmonisch anpassen */
+.login-container .form-group label {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.login-container input[type="text"], .login-container input[type="password"] {
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
+.login-container .btn {
+    padding: 10px 20px;
+    font-size: 15px;
+}
